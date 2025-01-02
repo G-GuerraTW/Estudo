@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <ul>
+            <li>
+                <h3>CFB Cursos</h3>
+                <span>Curso de JQuery</span>
+                <p>Seletores Parent</p>
+            </li>
+        </ul>
+    </div>
+    <script>
+        // .parent() pega o pai do elemento selecionado
+        // $('p').parent().css({'border': '1px solid #f00'})
+        // $('li').parent().css({'border': '1px solid #00f'})
+        // $('ul').parent().css({'border': '1px solid #0f0'})
+        // $('div').parent().css({'border': '1px solid #ff0'})
+        // $('body').parent().css({'border': '1px solid #f0f'})
+
+        // .parents() pega em cadeia o pai e todos os anteriores
+        // $('p').parents().css({'border': '1px solid #f00'})
+
+        // .parentsUntil pega os pais, porem no elemento limite selecionado
+        $('p').parentsUntil('div').css({'border' : '1px solid #f00'})
+    </script>
+</body>
+</html>

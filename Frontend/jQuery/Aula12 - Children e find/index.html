@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <ul>
+            <li>CFB Cursos</li>
+            <li>Curso de jQuery</li>
+            <li>Seletores Parent</li>
+        </ul>
+        <ul>
+            <li>CFB Cursos</li>
+            <li>Curso de jQuery</li>
+            <li>Seletores Parent</li>
+        </ul>
+    </div>
+    <script>
+        //Aplica se em todos os elementos FILHOS de um determinado elemento
+        // $('div').children().css({'border' : '1px solid #f00'})]
+        
+        //Apartir do elemento div quero pesquisar todos elementos UL ( ENCONTR UL DENTRO DE DIV)
+        $('div').find('ul').css({'border' : '1px solid #f00'})
+    </script>
+</body>
+</html>

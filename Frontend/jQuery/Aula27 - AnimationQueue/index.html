@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <title>Document</title>
+    <style>
+        .caixa {
+            background-color: #f00;
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <p>
+        <button id="btn_Aumentar">Aumentar</button>
+        <button id="btn_Diminuir">Diminuir</button>
+    </p>
+
+    <p>
+        <button id="btn_Finalizar">Finalizar</button>
+    </p>
+
+    <p id="info">0</p>
+
+    <div id="caixa" class="caixa"></div>
+
+    
+    <script>
+        $('#btn_Aumentar').click(
+            function() {
+                $('#caixa').animate({'width' : '800px'},{duration : 5000, complete : ()=>{
+                    $('#info').text($('#caixa').queue().length)
+                }})
+                $('#info').text($('#caixa').queue().length)
+            }
+        )
+
+        $('#btn_Diminuir').click(
+            function() {
+                $('#caixa').animate({'width' : '100px'},{duration : 5000, complete : ()=>{
+                    $('#info').text($('#caixa').queue().length)
+                }})
+                $('#info').text($('#caixa').queue().length)
+            }
+        )
+
+        $('#btn_Finalizar').click(
+            function() {
+                $('#caixa').finish()
+            }
+        )
+
+        // https://www.youtube.com/watch?v=TcVur7D-K3Q&list=PLx4x_zx8csUiOBWiybY2cIjhNLIUn4JCn&index=27&ab_channel=CFBCursos
+    </script>
+</body>
+</html>

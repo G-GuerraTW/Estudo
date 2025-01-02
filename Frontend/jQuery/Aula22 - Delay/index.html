@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <title>Document</title>
+    <style>
+        .caixa{
+            border: 1px solid #000;
+            width: 200px;
+            height: 200px;
+            background-color: #008;
+            color: #fff;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            position: absolute;
+            left: 20px;
+            top: 50px;
+            padding: 10px;
+            text-align: center;
+            box-sizing: border-box;
+ 
+        }
+    </style>
+</head>
+<body>
+    <div id="caixa" class="caixa">
+        <h3>CFB Cursos</h3>
+        <p>Curso de jQuery</p>
+    </div>
+
+    <button id="btn_Aumentar">Aumentar</button>
+    <button id="btn_Diminuir">Diminuir</button>
+    <button id="btn_Mostrar">Ocultar / Mostrar</button>
+
+    <script>
+        $('#btn_Aumentar').click(
+            function () {
+                $('#caixa').delay(2000).animate({'width' : '500px'}).delay(2000).animate({'height' : '500px'})
+            }
+        )
+
+        $('#btn_Mostrar').click(
+            function () {
+                $('#caixa').animate({'width' : 'toggle', 'height' : 'toggle'})
+            }
+        )
+
+        $('#btn_Diminuir').click(
+            function () {
+                $('#caixa').delay(2000).animate({'width' : '200px'}).delay(2000).animate({'height' : '200px'})
+            }
+        )
+    </script>
+</body>
+</html>

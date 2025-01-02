@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <title>Document</title>
+    <style>
+        .caixa {
+            background-color: #bbb;
+            border: 3px solid #000;
+            border-radius: 10px;
+            padding: 10px 0px 0px 0px;;
+            display: flex;
+            width: 100%;
+            box-sizing: border-box;
+            flex-wrap: wrap;
+        }
+
+        .subCaixa {
+            width: 100px;
+            height: 100px;
+            margin: 0px 0px 10px 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: xx-large;
+        }
+    </style>
+</head>
+<body>
+    <p>
+        <button id="btnVerde">Verde </button>
+        <button id="btnVermelho">Vermelho</button>
+        <button id="btnAzul">Azul</button>
+    </p>
+
+    <div id="caixa" class="caixa">
+        <div id="d0" class="subCaixa" style="background-color: white">0</div>
+    </div>
+
+    <script>
+        $('#btnVerde').click(()=>{
+            $('#caixa').css({"background-color" : "#0f0", "color" : "#f0f"})
+            //DESTA MANEIRA CONSEGUIMOS EXPLICITAR O QUE TEM DE CONTEUDO CSS NO ELEMENTO SEGUINDO A PROPRIEDADE SELECIONADA
+            alert($("#caixa").css("background-color"))
+        });
+
+        $('#btnVermelho').click(()=>{
+            $('#caixa').css({"background-color" : "#f00", "color" : "#0f0"})
+        });
+
+        $('#btnAzul').click(()=>{
+            $('#caixa').css({"background-color" : "#00f", "color" : "#ff0"})
+        });
+        
+    </script>
+</body>
+</html>
+ 

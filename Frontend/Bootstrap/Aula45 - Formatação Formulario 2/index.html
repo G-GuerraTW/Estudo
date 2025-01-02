@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CFB Cursos - Curso de Bootstrap</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <form action="" class="p-3 was-validated">
+        <div class="my-3 input-group">
+            <label class="form-label" for="f_Email">Nome:</label>
+            <div class="input-group">
+                <span class="input-group-text">Digite seu nome:</span>
+                <input class="form-control" type="text" name="f_Email" required>
+            </div>
+        </div>
+        <div class="my-3 was-validated">
+            <div class="form-floating mb-3 mt-3">
+                <input class="form-control" type="email" name="f_Email" id="f_Email" placeholder="Digite o e-mail" required>
+                <label class="form-label" for="f_Email">E-mail</label>
+            </div>
+        </div>
+        <div class="my-3 was-validated">
+            <label class="form-label" for="f_Senha">Senha:</label>
+            <input class="form-control" type="password" id="f_Senha" required>
+            <div class="valid-feedback">Senha OK</div>
+            <div class="invalid-feedback">Senha Errada</div>
+
+        </div>
+        <div class="my-3 col">
+            <label class="form-label" for="f_Telefone">Selecione uma Cor:</label>
+            <input class="form-control form-control-color" type="color" name="f_Telefone">
+        </div>
+        <div class="row">
+            <div class="my-3 col">
+                <label class="form-label" for="f_Telefone">Telefone</label>
+                <input class="form-control" type="text" name="f_Telefone">
+            </div>
+            <div class="my-3 col">
+                <label class="form-label" for="f_Date">Nascimento</label>
+                <input class="form-control" type="date" name="f_Date">
+            </div>
+        </div>
+        <div class="my-3">
+            <label class="form-label" for="f_Nome">Transporte:</label>
+            <select class="form-select" name="f_CarroSelect" id="f_CarroSelect">
+                <option>Carro</option>
+                <option>Motocicleta</option>
+                <option>Avião</option>
+                <option>Trem</option>
+                <option>Navio</option>
+            </select>
+        </div>
+
+        <div class="my-3">
+            <div>
+                <input class="form-check-input" type="checkbox" id="f_chkTerestre" value="terrestre">
+                <label class="form-check-label" for="">Terrestre</label>
+            </div>
+            <div>
+                <input class="form-check-input" type="checkbox" id="f_chkAereo" value="Aéreo">
+                <label class="form-check-label" for="">Aéreo</label>
+            </div>
+            <div>
+                <input class="form-check-input" type="checkbox" id="f_chkMaritimo" value="Maritimo">
+                <label class="form-check-label" for="">Maritimo</label>
+            </div>
+        </div>
+        <div class="my-3 p-2">
+            <label class="form-label" for="">Distancia máxima:</label>
+            <input class="form-range" type="range">
+        </div>
+        <div class="my-3 p-2">
+            <input class="btn btn-primary" type="submit" name="btn_enviar" value="enviar">
+        </div>
+    </form>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+  </body>
+</html>

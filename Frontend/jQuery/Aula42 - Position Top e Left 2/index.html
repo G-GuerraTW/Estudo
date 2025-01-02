@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <title>Document</title>
+    <style>
+        .caixa {
+            background-color: #ddd;
+            border: 1px solid #000;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100px;
+            height: 100px;
+            box-sizing: border-box;
+            flex-wrap: wrap;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <p>
+        <button id="btnPosicao">Posição</button>
+        <br/>
+        <labeL>Topo:</labeL>
+        <input type="range" id="top" name="top" min="0" max="500">
+        <labeL>Left:</labeL>
+        <input type="range" id="left" name="top" min="0" max="500">
+    </p>
+
+    <div class="caixa" id="caixa" style="position: absolute;top: 100px; background-color: #f00;">
+    </div>
+
+    <script>
+        $('#btnPosicao').click(()=>{
+            let pt = $('#caixa').position().top
+            let pl = $('#caixa').position().left
+            let ot = $('#caixa').offset().top
+            let ol = $('#caixa').offset().left
+            window.alert(pt + "  " + pl + " " + ot + " " + ol)
+        })
+
+        $('#top').change((e)=>{
+            let = valor = e.target.value
+            $('#caixa').offset({"top" : valor})
+        })
+
+        $('#left').change((e)=>{
+            let = valor = e.target.value
+            $('#caixa').offset({"left" : valor})
+        })
+    </script>
+</body>
+</html>

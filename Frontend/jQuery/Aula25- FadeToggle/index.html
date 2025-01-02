@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            border: none;
+        }
+
+        .menu {
+            background-color: #ddd;
+            width: 100%;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .itemMenu {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            margin: 10px;
+            border-radius: 10px;
+            padding: 10px;
+            background-color: #128;
+            color: #fff;
+            text-transform: capitalize;
+            cursor: pointer;
+        }
+
+        .submenu {
+            display: none;
+            border: 1px solid #000;
+            width: 100%;
+            height: 30px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .itemSubMenu {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 150px;
+            height: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            padding: 10px;
+            color: white;
+            background-color: #128;
+            text-transform: capitalize;
+            cursor: pointer;
+            box-sizing: border-box ;
+
+        }
+    </style>
+</head>
+<body>
+    <div id="menu" class="menu">
+        <div class="itemMenu">Home</div>
+        <div id="menuJquery" class="itemMenu">jQuery</div>
+        <div id="menuCanvas" class="itemMenu">Canvas</div>
+        <div id="menuPython" class="itemMenu">Python</div>
+        <div id="menuArduino" class="itemMenu">Arduino</div>
+    </div>
+
+    <div id="submenu_Jquery" class="submenu">
+        <div class="itemSubMenu">Aulas jQuery</div>
+        <div class="itemSubMenu">Material jQuery</div>
+    </div>
+
+    <div id="submenu_Canvas" class="submenu">
+        <div class="itemSubMenu">Aulas Canvas</div>
+        <div class="itemSubMenu">Material Canvas</div>
+    </div>
+
+    <div id="submenu_Python" class="submenu">
+        <div class="itemSubMenu">Aulas Python</div>
+        <div class="itemSubMenu">Material Python</div>
+    </div>
+
+    <div id="submenu_Arduino" class="submenu">
+        <div class="itemSubMenu">Aulas Arduino</div>
+        <div class="itemSubMenu">Material Arduino</div>
+    </div>
+    <script>
+        $('.itemMenu').click(
+            function() {
+                if($(this).css('opacity') == 1)
+                    $(this).animate({'opacity' : '0.3'})
+                else
+                $(this).animate({'opacity' : '1'})
+            }
+        )
+
+        $('#menuJquery').click(
+            function() {
+                $('#submenu_Jquery').fadeToggle()
+                $('#submenu_Jquery').css('display','flex')
+            }
+        )
+
+        $('#menuCanvas').click(
+            function() {
+                $('#submenu_Canvas').fadeToggle()
+                $('#submenu_Canvas').css('display','flex')
+            }
+        )
+
+        $('#menuPython').click(
+            function() {
+                $('#submenu_Python').fadeToggle()
+                $('#submenu_Python').css('display','flex')
+            }
+        )
+
+        $('#menuArduino').click(
+            function() {
+                $('#submenu_Arduino').fadeToggle()
+                $('#submenu_Arduino').css('display','flex')
+            }
+        )
+    </script>
+</body>
+</html>

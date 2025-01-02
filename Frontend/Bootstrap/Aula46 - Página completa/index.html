@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CFB Cursos - Curso de Bootstrap</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+    <style>
+        .bg-cinza {
+            background-color: #ddd;
+        }
+    </style>
+  </head>
+  <body>
+    <header class="p-3 bg-primary text-white d-flex" style="height: 250px;">
+        <img src="imgs/starcraft.jpg" alt="" class="img-fluid rounded-pill border border-3 border-dark">
+        <h3 class="m-auto align-self-center">Modelo de site Bootstrap</h3>
+    </header>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <div class="container-fluid">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Arduino</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Bootstrap</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">React-Native</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="rounded p-2 mb-3 bg-cinza">
+                    <h2>Titulo do conteudo</h2>
+                    <h5>Descrição do conteudo</h5>
+                    <p>Ea ut ex eiusmod sunt amet excepteur mollit aliqua nulla est ipsum. Ea aute laborum minim aliqua reprehenderit occaecat elit pariatur. Tempor esse quis eiusmod laborum fugiat velit in consectetur laborum. Minim occaecat cillum sint irure sit nostrud voluptate eu irure.</p>
+                </div>
+                <div class="rounded p-2 mb-3 bg-cinza">
+                    <h2>Titulo do conteudo</h2>
+                    <h5>Descrição do conteudo</h5>
+                    <p>Ea ut ex eiusmod sunt amet excepteur mollit aliqua nulla est ipsum. Ea aute laborum minim aliqua reprehenderit occaecat elit pariatur. Tempor esse quis eiusmod laborum fugiat velit in consectetur laborum. Minim occaecat cillum sint irure sit nostrud voluptate eu irure.</p>
+                </div>
+                <div class="rounded p-2 mb-3 bg-cinza">
+                    <h2>Titulo do conteudo</h2>
+                    <h5>Descrição do conteudo</h5>
+                    <p>Ea ut ex eiusmod sunt amet excepteur mollit aliqua nulla est ipsum. Ea aute laborum minim aliqua reprehenderit occaecat elit pariatur. Tempor esse quis eiusmod laborum fugiat velit in consectetur laborum. Minim occaecat cillum sint irure sit nostrud voluptate eu irure.</p>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <h2>Sobre</h2>
+                <h5>Sobre o CFV Cursos</h5>
+                <p>Somos um canal do Youtube para cursos de programação em geral</p>
+                <h3 class="mt-4">Alguns Cursos</h3>
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item"><a class="nav-link" id="n1" onmouseover="marcar(this.id)" onmouseout="marcar(this.id)" href="#">Curso 1</a></li>
+                    <li class="nav-item"><a class="nav-link" id="n2" onmouseover="marcar(this.id)" onmouseout="marcar(this.id)" href="#">Curso 2</a></li>
+                    <li class="nav-item"><a class="nav-link" id="n3" onmouseover="marcar(this.id)" onmouseout="marcar(this.id)" href="#">Curso 3</a></li>
+                    <li class="nav-item"><a class="nav-link" id="n4" onmouseover="marcar(this.id)" onmouseout="marcar(this.id)" href="#">Curso 4</a></li>
+                    <li class="nav-item"><a class="nav-link" id="n5" onmouseover="marcar(this.id)" onmouseout="marcar(this.id)" href="#">Curso 5</a></li>
+                    <li class="nav-item"><a class="nav-link" id="n6" onmouseover="marcar(this.id)" onmouseout="marcar(this.id)" href="#">Curso 6</a></li>
+                    <li class="nav-item"><a class="nav-link" id="n7" onmouseover="marcar(this.id)" onmouseout="marcar(this.id)" href="#">Curso 7</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <footer class="mt-5 p-4 bg-dark text-white text-center">
+        <p>CFB Cursos | youtube.com/cfbcursos | cfbcursos.com.br</p>
+    </footer>
+    <script>
+        const marcar=(obj)=> {
+            document.getElementById(obj).classList.toggle("active")
+        } 
+    </script>
+  </body>
+</html>
+ 

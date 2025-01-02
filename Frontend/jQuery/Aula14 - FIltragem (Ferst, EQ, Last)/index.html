@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+<body>
+    <p>CFB Cursos</p>
+    <h3>CFB Cursos</h3>
+    <p>Curso de canvas</p>
+    <h3>Curso de canvas</h3>
+    <p>youtube.com/cfbcursos</p>
+    <h3>youtube.com/cfbcursos</h3>
+    <p>www.cfbcursos.com.br</p>
+    <h3>www.cfbcursos.com.br</h3>
+    <p>FIltrando elementos</p>
+    <h3>Filtrando elementos</h3>
+    <script>
+        // Filtro First e Last (trabalha com o primeiro ou ultimo elemento)
+        $('p').first().css({'border' : '1px solid #f00', 'background-color' : '#ffa'});
+        $('p').last().css({'border' : '1px solid #f00', 'background-color' : '#afa'});
+        // eq seleciona apartir do elemento indicado qual sera o proximo irmao selecionado
+        $('h3').eq(1).css({'border' : '1px solid #f000', 'background-color' : '#afa'})
+
+    </script>
+</body>
+</html>

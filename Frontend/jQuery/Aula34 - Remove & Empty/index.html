@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <title>Document</title>
+    <style>
+        .caixa {
+            background-color: #bbb;
+            border: 3px solid #000;
+            border-radius: 10px;
+            padding: 10px 0px 0px 0px;;
+            display: flex;
+            width: 100%;
+            box-sizing: border-box;
+            flex-wrap: wrap;
+        }
+
+        .subCaixa {
+            width: 100px;
+            height: 100px;
+            margin: 0px 0px 10px 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: xx-large;
+        }
+    </style>
+</head>
+<body>
+    <p>
+        <button id="btnAdicionar">Adicionar </button>
+        <button id="btnRemover">Remover elemento</button>
+        <button id="btnRemoverConteudo">Remover conteúdo</button>
+    </p>
+
+    <div id="caixa" class="caixa">
+        <div id="0" class="subCaixa" style="background-color: white">0</div>
+    </div>
+
+    <script>
+        
+              let r, g, b;
+            let num = 1;
+
+        $('#btnAdicionar').click(()=>{
+            r = Math.floor(Math.random()*255)
+            g = Math.floor(Math.random()*255)
+            b = Math.floor(Math.random()*255)
+            $('#caixa').append(`<div id="${num}" class="subCaixa" style="background-color: rgb(${r}, ${g}, ${b});">${num}</div>`)
+            num++;
+        })
+        
+        $('#btnRemover').click(()=>{
+            $('#' + (num-1)).remove();
+            num--
+        })
+
+        $('#btnRemoverConteudo').click(()=>{
+
+            $('#caixa').append(`<div class="subCaixa" style="background-color: rgb(${r}, ${g}, ${b});">${num}</div>`)
+            num++;
+        })
+
+        $('#btnRemoverConteudo').click(()=>{
+
+            $('#caixa').empty()
+            num = 0
+        })
+
+        
+
+        
+    </script>
+</body>
+</html>
+
+
+<!-- https://www.youtube.com/watch?v=kKUHg5w94Pw&list=PLx4x_zx8csUiOBWiybY2cIjhNLIUn4JCn&index=30 -->

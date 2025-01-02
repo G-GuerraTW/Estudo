@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <title>Document</title>
+    <style>
+        .caixa{
+            border: 1px solid #000;
+            width: 200px;
+            height: 200px;
+            background-color: #aaa;
+            position: absolute;
+            left: 0px;
+            top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div id="caixa" class="caixa">
+        <h3>CFB Cursos</h3>
+        <p>Curso de jQuery</p>
+    </div>
+
+    <button id="btn_Aumentar">Aumentar</button>
+    <button id="btn_Diminuir">Diminuir</button>
+    <button id="btn_Esquerda">Esquerda</button>
+    <button id="btn_Direita">Direita</button>
+
+    <script>
+
+        //FUNCAO ANimate FAZ UMA ANIMACAO DO CSS APLICADO NELA ENTRE OS {} SERA A ANIMACAO REALIZADA
+        // LOGO APOS PARAMETROS DE ANIMACAO TEM O OBJETO DE CONFIGURACAO DE ANIMACAO
+        $("#btn_Aumentar").click(
+            function(){
+                $('#caixa').animate({'width' : '500', 'height' : '500px'}, {duration : 475})
+            }
+        )
+
+        $("#btn_Diminuir").click(
+            function(){
+                $('#caixa').animate({'width' : '200'}).animate({ 'height' : '200px'})
+            }
+        )
+
+        $("#btn_Direita").click(
+            function(){
+                $('#caixa').animate({'left' : '500px'},{complete : ()=>{
+                    $('#caixa').animate({'left' : '0'})
+                }})
+            }
+        )
+
+    </script>
+</body>
+</html>

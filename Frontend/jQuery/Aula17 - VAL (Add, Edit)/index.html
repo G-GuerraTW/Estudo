@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <title>Document</title>
+    <style>
+        .vermelho {
+            border: 1px solid #000;
+            width: 200px;
+            height: 200px;
+            background-color: rgba(224, 69, 21, 0.562);
+        }
+
+        .azul {
+            border: 1px solid #000;
+            width: 200px;
+            height: 200px;
+            background-color: blue ;
+        }
+    </style>
+</head>
+<body>
+    <div class="vermelho" id="caixa">
+        <h3>CFB Cursos</h3>
+        <p>Curso de jQuery</p>
+        <button id="btnVermelho">Vermelho</button>
+        <button id="btnAzul">Azul</button>
+    </div>
+    <script>
+        $('#btnAzul').click(()=>{
+            $('#caixa').attr('class', 'azul')
+        })
+
+        $('#btnVermelho').click(()=>{
+            $('#caixa').attr('class', 'vermelho')
+        })
+    </script>
+</body>
+</html>

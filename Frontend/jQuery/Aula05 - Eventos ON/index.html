@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <style>
+        #bloco {
+            width: 200px;
+            height: 200px;
+            background-color: #000;
+        }
+        #bloco1 {
+            width: 200px;
+            height: 200px;
+            background-color: #000;
+            margin-top: 15px;
+        }
+    </style>
+    <title>Document</title>
+</head>
+<body>
+    <div id="bloco">
+    </div>
+    <div id="bloco1">
+    </div>
+    <p id="texto"></p>
+    <p id="texto1"></p>
+    <script>
+        $('#bloco').on('click dblclick', ()=>{
+            $('#texto').text("Clique no quadrado")
+        })
+
+        $('#bloco1').on({
+            click:()=>{
+                $('#texto1').text('Clicado')
+            },
+            mouseenter:()=>{
+                $('#texto1').text('Mouse Entrou')
+            },
+            mouseout:()=>{
+                $('#texto1').text('Mouse Saiu')
+            }
+        })
+    </script>
+</body>
+</html>
+<!-- https://www.youtube.com/watch?v=6rvBh27nHXk -->

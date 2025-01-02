@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <title>Document</title>
+    <style>
+        p {
+            background-color: #ffa;
+        }
+
+        h3 {
+            background-color: #afa;
+        }
+
+        .borda {
+            border: 1px solid #f00;
+        }
+    </style>
+</head>
+<body>
+    <p class="borda">CFB Cursos</p>
+    <h3>CFB Cursos</h3>
+
+    <p>Curso de canvas</p>
+    <h3>Curso de canvas</h3>
+
+    <p>youtube.com/cfbcursos</p>
+    <h3>youtube.com/cfbcursos</h3>
+
+    <p>www.cfbcursos.com.br</p>
+    <h3>www.cfbcursos.com.br</h3>
+
+    <p class="borda">FIltrando elementos</p>
+    <h3>Filtrando elementos</h3>
+
+    <script>
+        // identifica um ou varios elementos (id, classe, valor) e aplica algo a ele(s)
+        $('p').filter('.borda').css({'color' : '#f00'})
+        // Seleciona elementos e aplica aos elementos NÂO selecionados.
+        $('p').not('.borda').css({'color' : '#f0f'})
+    </script>
+</body>
+</html>

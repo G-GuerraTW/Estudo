@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <span>
+            <h3>CFB Cursos</h3>
+            <p>Curso de jQuery</p>
+            <h2>Seletores parent</h2>
+            <p>Siblings </p>
+        </span>
+    </div>
+    <script>
+        //Apartir de h3 selecione todos seus irmãos
+        $('h3').siblings('*').css({'border' : '1px solid #f00'})
+
+        //Apartir do h3 selecione seu irmão P
+        // $('h3').siblings('p').css({'border' : '1px solid #f00'})
+
+        // NEXT seleciona o próximo irmão a Direita do selecionado
+        // $('h3').next('p').css({'border' : '1px solid #f00'})
+
+        //Faz o inverso do NEXT
+        // $('h3').prev('p').css({'border' : '1px solid #f00'})
+
+        //existe o prevUntil, prevAll - nextUntil, nextAll
+        // $('h3').prev('p').css({'border' : '1px solid #f00'})
+    </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <title>Document</title>
+    <style>
+        .caixa {
+            background-color: #bbb;
+            border: 3px solid #000;
+            border-radius: 10px;
+            padding: 10px 0px 0px 0px;;
+            display: flex;
+            width: 100%;
+            box-sizing: border-box;
+            flex-wrap: wrap;
+        }
+
+        .subCaixa {
+            width: 100px;
+            height: 100px;
+            margin: 0px 0px 10px 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: xx-large;
+        }
+    </style>
+</head>
+<body>
+    <p>
+        <button id="btnAdicionarAntes">Adicionar Antes</button>
+        <button id="btnAdicionarDepois">Adicionar Depois</button>
+        <button id="btnAdicionarTextoAntes">Adicionar Texto Antes</button>
+        <button id="btnAdicionarTextoDepois">Adicionar Texto Depois</button>
+    </p>
+
+    <div id="caixa" class="caixa">
+        <div class="subCaixa" style="background-color: white">0</div>
+    </div>
+    <div class="caixa" id="caixa2">CFB Cursos</div>
+
+    <br>
+    <br>
+    <br>
+
+    <p>
+        <button id="btnAdicionarAntes1">Adicionar Antes</button>
+        <button id="btnAdicionarDepois1">Adicionar Depois</button>
+        <button id="btnAdicionarTextoAntes1">Adicionar Texto Antes</button>
+        <button id="btnAdicionarTextoDepois1">Adicionar Texto Depois</button>
+    </p>
+
+    <div id="caixa1" class="caixa">
+        <div class="subCaixa" style="background-color: white">0</div>
+    </div>
+    <div class="caixa" id="caixa12">CFB Cursos</div>
+    <script>
+            let r, g, b;
+            let num = 1;
+
+        $('#btnAdicionarAntes').click(()=>{
+            r = Math.floor(Math.random()*255)
+            g = Math.floor(Math.random()*255)
+            b = Math.floor(Math.random()*255)
+            $('#caixa').prepend(`<div class="subCaixa" style="background-color: rgb(${r}, ${g}, ${b});">${num}</div>`)
+            num++;
+        })
+
+        $('#btnAdicionarDepois').click(()=>{
+            r = Math.floor(Math.random()*255)
+            g = Math.floor(Math.random()*255)
+            b = Math.floor(Math.random()*255)
+            $(`<div class="subCaixa" style="background-color: rgb(${r}, ${g}, ${b});">${num}</div>`).appendTo($('#caixa'))
+            num++
+        })
+        $('#btnAdicionarTextoAntes').click(()=>{
+            $('#caixa2').prepend(' Curso de jQuery ANTES ')
+        })
+
+        $('#btnAdicionarTextoDepois').click(()=>{
+            $('#caixa2').append(' Curso de jQuery DEPOIS ')
+        })
+
+        let num1 = 1;
+
+        $('#btnAdicionarAntes1').click(()=>{
+            r = Math.floor(Math.random()*255)
+            g = Math.floor(Math.random()*255)
+            b = Math.floor(Math.random()*255)
+            $('#caixa1').prepend(`<div class="subCaixa" style="background-color: rgb(${r}, ${g}, ${b});">${num}</div>`)
+            num1++;
+        })
+
+        $('#btnAdicionarDepois1').click(()=>{
+            r = Math.floor(Math.random()*255)
+            g = Math.floor(Math.random()*255)
+            b = Math.floor(Math.random()*255)
+            $(`<div class="subCaixa" style="background-color: rgb(${r}, ${g}, ${b});">${num}</div>`).appendTo($('#caixa1'))
+            num1++
+        })
+        $('#btnAdicionarTextoAntes1').click(()=>{
+            $('#caixa12').before(' Curso de jQuery ANTES ')
+        })
+
+        $('#btnAdicionarTextoDepois1').click(()=>{
+            $('#caixa12').after(' Curso de jQuery DEPOIS ')
+        })
+        //AFTE ADICIONA O NOVO CONTEUDO ANTES OU DEPOIS DA DIV SELECIONADA E NÂO DENTRO DELA
+    </script>
+</body>
+</html>
+
+
+<!-- https://www.youtube.com/watch?v=kKUHg5w94Pw&list=PLx4x_zx8csUiOBWiybY2cIjhNLIUn4JCn&index=30 -->

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <title>Document</title>
+    <style>
+        .cor {
+            color: #f00;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="menu">
+        <button id="btn_rolar_left">Rolar left</button>
+        <button id="btn_rolar_top">Rolar top</button>
+        <button id="btn_pos_left">Posição left</button>
+        <button id="btn_pos_top">Posição top</button>
+        <button id="btn_reset_pos">Resetar Posição</button>
+    </div>
+    <div id="texto" style="border: 1px solid #000; width : 75px; height : 150px;overflow : auto">
+        CFB Cursos, curso de jQuery, não deixe de conferir nosso site e baixe todas apostilas gratuitas, configura também teste de largura do conteudo apresentado
+        CFB Cursos, curso de jQuery, não deixe de conferir nosso site e baixe todas apostilas gratuitas, configura também teste de largura do conteudo apresentado
+        CFB Cursos, curso de jQuery, não deixe de conferir nosso site e baixe todas apostilas gratuitas, configura também teste de largura do conteudo apresentado
+    </div>
+    <script>
+        $('#btn_rolar_left').click(() => {
+            $('#texto').scrollLeft(15)
+        })
+
+        $('#btn_rolar_top').click(() => {
+            $('#texto').scrollTop(150)
+        })
+
+        $('#btn_pos_left').click(() => {
+            alert($('#texto').scrollLeft())
+        })
+
+        $('#btn_pos_top').click(() => {
+            alert($('#texto').scrollTop())
+        })
+
+        $('#btn_reset_pos').click(() => {
+            $('#texto').scrollTop(0)
+            $('#texto').scrollLeft(0)
+        })
+    </script>
+</body>
+</html>

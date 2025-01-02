@@ -1,0 +1,24 @@
+{
+    "arrayOfProducts": [
+        {
+            "name": "Nokia PureBox X14 core i5 10th Gen",
+            "price": 57990,
+            "description": "Bring home the powerful and stylish Computer"
+        },
+        {
+            "name": "Samsung Tea-Fork core i7 10th Gen",
+            "price": 79990,
+            "description": "Bring home the powerful Micro Computer"
+        },
+        {
+            "name": "Lenovo Style-X core i3 13th Gen",
+            "price": 27990,
+            "description": "Bring home the powerful notebook"
+        },
+        {
+            "name": "Sony Vayo core i9k 13th Gen",
+            "price": 119990,
+            "description": "Bring home the powerful Fastest notebook"
+        }
+    ]
+}

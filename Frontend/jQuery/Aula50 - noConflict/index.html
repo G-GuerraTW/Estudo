@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <title>Document</title>
+    <style>
+        .caixa {
+            background-color: #ff0;
+            padding: 10px;
+            border: 3px solid #f00;
+            border-radius: 5px;
+            margin-top: 10px;
+        } 
+    </style>
+</head>
+<body>
+    <div id="caixa" class="caixa">
+        <p id="p1">CFB Cursos</p>
+        <p id="p2">Curso de jQuery</p>
+        <p id="p3">Função each()</p>
+        <p id="p4">cfbcursos.com.br</p>
+        <p id="p5">youtube.com/cfbcursos</p>
+    </div>
+
+    <p id="p1">CFB Cursos</p>
+    <p id="p2">Curso de jQuery</p>
+    <p id="p3">Função each()</p>
+    <p id="p4">cfbcursos.com.br</p>
+    <p id="p5">youtube.com/cfbcursos</p>
+    <script>
+        let CFB = $.noConflict()
+
+        CFB("p").click((e)=> {
+            alert(CFB(e.currentTarget).index())
+        })
+    </script>
+</body>
+</html>
