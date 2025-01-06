@@ -163,6 +163,37 @@ Após ter as imagens, iniciaremos com a configuração da máquina virtual do **
 - Acesse `Firewall > Rules > OpenVPN` e adicione uma nova regra:
   - **Description**: `Liberação para TI`
 
+### 8. Agora iremos exportar o Cliente do OPen VPN
+  1. Acesse o caminho: VPN/OPENVPN/Client Export e deixe a configuração como na imagem a baixo.
+    ![Imagem](/imagens/OpenVPN%20Client%20Export.png) e logo após preencher os dados selecione o Linked user para baixar o certificado e utilizar no cliente.
+
 ---
 
-Pronto! Esse conteúdo foi organizado e estruturado de forma clara para facilitar sua consulta no futuro. Caso precise de ajustes adicionais, posso ajudá-lo com isso.
+## Instalando PVE1 
+
+### 1. Agora iremos configurar a VM PV1 que portara a configuração do Cluster Proxmox, sua configuração deve ficar como listado na imagem abaixo:
+![Imagem](/imagens/virtualBoxPVE1.png) e após a configuração deste pv1 devemos clonar a maquina antes de iniciar a instalação para uma nova maquina chamada **pveBase** pois quando tivermos a necessidade de criar novos PVE clonamos deste pveBase que ja está pronto para uso.
+
+### 2. Instalando PVE no primeiro Node
+  1. Apos iniciar o pv1 com a imagem do proxmox selecione a opção graphical para instalação no node.
+  2. Inicie a instalação selecionando o disco maior de 35 gigas para o sistema do proxmox, 
+      1. está maquina tera o endereço: IP 192.168.110.101/24 | Gateway 192.168.110.10 | DNS: 192.168.110.10 
+      2. após a atribuição dos endereços IP continue para instalação de PVE e posteriormente ele ira rebootar
+      3. após o reboot ter acontecido e a instalação concluida do PVE agora voce conecte no endereço dele utilizando o navegado.
+  3. Ajustando repositórios do node para atualização é necessario realizar todos os novos no para alinhar as versões de softwares e bibliotecas
+    1.  Selecione o PVE aqual e navegue para o caminho Updates/Repositories e nesta janela clique em ADD repositories, após selecionar o botão add vai aparecer uma janela falando que não tem subscription, de OK e após isso no dropdown selecione a opção No-Subscription e clique em ADD novamente.
+    2.  Desabilite o Repositories Enterprise na lista,
+    3. Navegue até /Updates e selecione a opção Refresh
+    4. proximo passo é selecionar na parte superior UPGRADE, prossiga com Y para atualização, e neste momento não podera ser fechada a janela do console, caso fechar sera pausada a atualização do kernel da PVE.
+    5. Reboot no node via web.
+
+    ---
+
+  ## opções de Rede, 
+  segue abaixo uma imagem mostrando as nomenclaturas para cada tipo de interface de rede que podemos utilizar no nosso PVE
+  ![Imagem](/imagens/nomenclaturaRedes.png)
+
+1. Criando uma placa Bridge para utilizar na VM dentro do proxmox
+  1. Acesse o o PVE via web e va para o caminho System/Network e crie uma nova interface de rede sendo uma Linux Bridge, defina o endereço de IP como por exemplo: 192.168.1.51/24 e no campo gateway deixe em branco para utilizar da bridge que ja está existe como placa fisica no PVE, em seguida clique em apply e confirme para criar está nova interface de rede.
+
+
