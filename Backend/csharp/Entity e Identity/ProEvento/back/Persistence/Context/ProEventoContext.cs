@@ -1,4 +1,5 @@
 using Domain.entities;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Context
@@ -11,5 +12,11 @@ namespace Persistence.Context
         public DbSet<RedeSocial> RedesSociais { get; set; }
         public DbSet<Palestrante> Palestrantes { get; set; }
         public DbSet<EventoPalestrante> EventosPalestrantes { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder) 
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        }
     }
 }

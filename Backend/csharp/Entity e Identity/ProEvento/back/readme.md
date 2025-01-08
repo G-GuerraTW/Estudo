@@ -369,7 +369,91 @@ namespace Persistence.Context
 
 #### Aproveitando que finalizamos a primeira parte da persistencia iremos ja adicionar a configuração do FluenteAPI manualmente, isso nos dara um total controle de como queremos que as tabelas e as propriedades se comportem no banco de dados.
 
+1. Iniciaremos adicionanado o trecho de código abaixo para o Entity procurar dentro de nossa persistencia todas classes que herdam de IEntityTypeConfiguration para dar override e adicionar as configurações do fluenteAPI apartir de outros arquivos, faremos isso para ter uma estrutura mais limpa e organizada, então dentro do repositorio Persistence criaremos uma nova pasta chamada Configurations e dentro dela teremos as classes por exemplo EventoConfiguration.cs e nela tera a configuração de maneira isolada de apenas aquela classe no qula o nome da diz.
 
+2. adicionemos o trecho de código abaixo no arquivo Persistence/Context/ProEventoContext.cs
+    ```csharp
+    using Domain.entities;
+    using System.Reflection;
+    using Microsoft.EntityFrameworkCore;
+
+    namespace Persistence.Context
+    {
+        public class ProEventoContext : DbContext
+        {
+            public ProEventoContext(DbContextOptions<ProEventoContext> options) : base(options) { }
+            public DbSet<Evento> Eventos { get; set; } 
+            public DbSet<Lote> Lotes { get; set; }
+            public DbSet<RedeSocial> RedesSociais { get; set; }
+            public DbSet<Palestrante> Palestrantes { get; set; }
+            public DbSet<EventoPalestrante> EventosPalestrantes { get; set; }
+
+            protected override void OnModelCreating(ModelBuilder modelBuilder) 
+            {
+                base.OnModelCreating(modelBuilder);
+                modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            }
+        }
+    }
+    ```
+3. notamos que nesta parte do código a intrução que foi adicionada foi o **Protected Override** e na parte superior adicionamos o System.Reflections.
+4. Agora criaremos nossa classe de configuração do FluenteAPI, abaixo estara listada o nome de cada classe e o conteudo:
+    1. **EventoConfiguration.cs**
+    ```csharp
+    using Domain.entities;
+    using Microsoft.EntityFrameworkCore;
+
+    namespace Persistence.Configurations
+    {
+        public class EventoConfiguration : IEntityTypeConfiguration<Evento>
+        {
+            public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Evento> builder)
+            {
+                builder.ToTable("Evento");
+                builder.HasKey(E => E.Id);
+                builder.Property(E => E.Local).HasColumnType("VARCHAR(200)");
+                builder.Property(E => E.Tema).HasColumnType("VARCHAR(200)");
+                builder.Property(E => E.DataEvento).HasColumnType("DATETIME()");
+                builder.Property(E => E.QtdPessoas).HasColumnType("INT(4)");
+                builder.Property(E => E.ImagemURL).HasColumnType("VARCHAR(400)");
+                builder.Property(E => E.Telefone).HasColumnType("VARCHAR(20)");
+                builder.Property(E => E.Email).HasColumnType("VARCHAR(100)");
+
+                builder.HasMany(E => E.Lotes)
+                    .WithOne(L => L.Evento)
+                    .HasForeignKey(L => L.EventoId)
+                    .IsRequired(false)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                builder.HasMany(E => E.RedesSociais)
+                    .WithOne(R => R.Evento)
+                    .HasForeignKey(R => R.EventoId)
+                    .IsRequired(false)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                builder.HasMany(E => E.EventosPalestrantes)
+                    .WithOne(EP => EP.Evento)
+                    .HasForeignKey(EP => EP.EventoId)
+                    .IsRequired(false)
+                    .OnDelete(DeleteBehavior.Cascade);
+            }
+        }
+    }
+    ```
+    2.
+     ```csharp
+
+    ```
+
+    3.
+     ```csharp
+
+    ```
+
+    4.
+     ```csharp
+
+    ```
 
 ---
 
