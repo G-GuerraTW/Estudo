@@ -177,7 +177,7 @@ Após ter as imagens, iniciaremos com a configuração da máquina virtual do **
 ### 2. Instalando PVE no primeiro Node
   1. Apos iniciar o pv1 com a imagem do proxmox selecione a opção graphical para instalação no node.
   2. Inicie a instalação selecionando o disco maior de 35 gigas para o sistema do proxmox, 
-      1. está maquina tera o endereço: IP 192.168.110.101/24 | Gateway 192.168.110.10 | DNS: 192.168.110.10 
+      1. está maquina tera o endereço: IP 192.168.110.101/24 | Gateway 192.168.110.10 | DNS: 192.168.110.10  e  Hostname: PVE2.Curso.DC
       2. após a atribuição dos endereços IP continue para instalação de PVE e posteriormente ele ira rebootar
       3. após o reboot ter acontecido e a instalação concluida do PVE agora voce conecte no endereço dele utilizando o navegado.
   3. Ajustando repositórios do node para atualização é necessario realizar todos os novos no para alinhar as versões de softwares e bibliotecas
@@ -226,3 +226,6 @@ sera listado abaixo os tipos de armazenamentos que o PVE gerencia,
       2. volte para o caminho PVE1/Disks/
       3. selecione os dicos /dev/sdb, sdc, sdd e clique em Wipe Disk
       4. em Disk selecione /dev/sdb va para a aba LVM-Thin e clique em Create Thinpool com o nome "pv1LvmThin"
+---
+
+### Crie um segundo Nó com o nome PVE2
