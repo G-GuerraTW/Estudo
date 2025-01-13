@@ -177,7 +177,7 @@ Após ter as imagens, iniciaremos com a configuração da máquina virtual do **
 ### 2. Instalando PVE no primeiro Node
   1. Apos iniciar o pv1 com a imagem do proxmox selecione a opção graphical para instalação no node.
   2. Inicie a instalação selecionando o disco maior de 35 gigas para o sistema do proxmox, 
-      1. está maquina tera o endereço: IP 192.168.110.101/24 | Gateway 192.168.110.10 | DNS: 192.168.110.10 
+      1. está maquina tera o endereço: IP 192.168.110.101/24 | Gateway 192.168.110.10 | DNS: 192.168.110.10  e  Hostname: PVE2.Curso.DC
       2. após a atribuição dos endereços IP continue para instalação de PVE e posteriormente ele ira rebootar
       3. após o reboot ter acontecido e a instalação concluida do PVE agora voce conecte no endereço dele utilizando o navegado.
   3. Ajustando repositórios do node para atualização é necessario realizar todos os novos no para alinhar as versões de softwares e bibliotecas
@@ -187,13 +187,45 @@ Após ter as imagens, iniciaremos com a configuração da máquina virtual do **
     4. proximo passo é selecionar na parte superior UPGRADE, prossiga com Y para atualização, e neste momento não podera ser fechada a janela do console, caso fechar sera pausada a atualização do kernel da PVE.
     5. Reboot no node via web.
 
-    ---
+---
 
   ## opções de Rede, 
   segue abaixo uma imagem mostrando as nomenclaturas para cada tipo de interface de rede que podemos utilizar no nosso PVE
   ![Imagem](/imagens/nomenclaturaRedes.png)
 
 1. Criando uma placa Bridge para utilizar na VM dentro do proxmox
-  1. Acesse o o PVE via web e va para o caminho System/Network e crie uma nova interface de rede sendo uma Linux Bridge, defina o endereço de IP como por exemplo: 192.168.1.51/24 e no campo gateway deixe em branco para utilizar da bridge que ja está existe como placa fisica no PVE, em seguida clique em apply e confirme para criar está nova interface de rede.
+    1. Acesse o o PVE via web e va para o caminho System/Network e crie uma nova interface de rede sendo uma Linux Bridge, defina o endereço de IP como por exemplo: 192.168.1.51/24 e no campo gateway deixe em branco para utilizar da bridge que ja está existe como placa fisica no PVE, em seguida clique em apply e confirme para criar está nova interface de rede.
+    2. apos realizar a configuração certifique de abrir o shell e pingar a rede, por exemplo 192.168.1.1
 
+---
 
+### Áreas de armazenamento
+
+sera listado abaixo os tipos de armazenamentos que o PVE gerencia,
+
+1. Existe dois tipos de storages de armazenamento no PROXMOX, a de nivel de arquivo e as de níveis de blocos,
+  1. Níveis de arquivos (Files level storage) | armazena qualquer tipo de arquivo inclusive discos virtuais
+  2. Block levle Storage | são armazenamentos proprio para guardar volumes de dados em formato raw, ou seja pode se armazenar diversos discos em um Block level storage
+  ![Imagem](/imagens/storagePVE.png)
+  3. Destaques de formatos para utilizarmos, DIR, VFS, Ceph/RBD, LVM Thin, ZFS
+  4. para verificar os formatos acesse datacenter/storage clique em add
+
+2. Formato DIR ou Directory é o mais simples de usar, so tendo um disco disponivel no node ja pode configurar ele na interface para ser um diretorio vamos seguir o passo a passo para monntar um disco do tipo DIR
+  1. Selecione o Nó aonde iremos criar o acesso para o Directory (PVE1)
+  2. selecione Disks/Directory clique em create: Directory
+  3. selecione o disco, exemplo /dev/sdb. após selecionar o disco selecione o formato EXT4 e de um nome para ele "DIR" e selecione add storage
+  4. Remover apos o teste, selecione o Datacenter, selecione Disk selecione o Disco DIR e apague ele, lembrando que para reutilizalo mesmo após apagado é necessario limpar ele
+
+3. CEPH e ZFS os melhores para formato de bloco
+
+### LVM
+
+  1. LVM é uma camada de software que utilizamos discos e partições, podemos criar volumes de dados, e reparcitionando as lvms da maneira que queremos, a LVM combinamos discos de outros clusters também e ele trabalha operando como um sharedstore, ja LVM Team pode apenas fazer o compartilhamento local dos dados.
+    1. Criando um Storage LVM Team para teste,
+      1. Selecione o node PVE1/Disks/Directory para remover o disco Directory anteriormente criado, clique nos 3 pontos no canto direito e clique em destroy
+      2. volte para o caminho PVE1/Disks/
+      3. selecione os dicos /dev/sdb, sdc, sdd e clique em Wipe Disk
+      4. em Disk selecione /dev/sdb va para a aba LVM-Thin e clique em Create Thinpool com o nome "pv1LvmThin"
+---
+
+### Crie um segundo Nó com o nome PVE2
