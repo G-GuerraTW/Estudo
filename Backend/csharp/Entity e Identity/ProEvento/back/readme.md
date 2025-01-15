@@ -440,21 +440,129 @@ namespace Persistence.Context
         }
     }
     ```
-    2.
+    2. **LoteConfiguration.cs**
      ```csharp
+    using Domain.entities;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+    namespace Persistence.Configurations
+    {
+        public class LoteConfiguration : IEntityTypeConfiguration<Lote>
+        {
+
+            public void Configure(EntityTypeBuilder<Lote> builder)
+            {
+                builder.ToTable("Lote");
+                builder.HasKey(L => L.Id);
+                builder.Property(L => L.Nome).HasColumnType("VARCHAR()");
+                builder.Property(L => L.DataInicio).HasColumnType("DATETIME()");
+                builder.Property(L => L.DataFim).HasColumnType("DATETIME()");
+                builder.Property(L => L.Valor).HasColumnType("DECIMAL()");
+                builder.Property(L => L.Quantidade).HasColumnType("INTEGER()");
+
+                builder.HasOne(L => L.Evento)
+                .WithMany(E => E.Lotes)
+                .HasForeignKey(L => L.EventoId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+            }
+        }
+    }
     ```
 
-    3.
+    3. **RedeSocialConfiguration.cs**
      ```csharp
+    using Domain.entities;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+    namespace Persistence.Configurations
+    {
+        public class LoteConfiguration : IEntityTypeConfiguration<Lote>
+        {
+
+            public void Configure(EntityTypeBuilder<Lote> builder)
+            {
+                builder.ToTable("Lote");
+                builder.HasKey(L => L.Id);
+                builder.Property(L => L.Nome).HasColumnType("VARCHAR()");
+                builder.Property(L => L.DataInicio).HasColumnType("DATETIME()");
+                builder.Property(L => L.DataFim).HasColumnType("DATETIME()");
+                builder.Property(L => L.Valor).HasColumnType("DECIMAL()");
+                builder.Property(L => L.Quantidade).HasColumnType("INTEGER()");
+
+                builder.HasOne(L => L.Evento)
+                .WithMany(E => E.Lotes)
+                .HasForeignKey(L => L.EventoId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+            }
+        }
+    }
     ```
 
-    4.
+    4. **PalestarnteConfigurations.cs**
      ```csharp
+    using Domain.entities;
+    using Microsoft.EntityFrameworkCore;
 
+    namespace Persistence.Configurations
+    {
+        public class PalestranteConfiguration : IEntityTypeConfiguration<Palestrante>
+        {
+            public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Palestrante> builder)
+            {
+                builder.ToTable("Palestrante");
+                builder.HasKey(P => P.Id);
+                builder.Property(P => P.Nome).HasColumnType("VARCHAR(150)");
+                builder.Property(P => P.MiniCurriculo).HasColumnType("VARCHAR(600)");
+
+                builder.HasMany(P => P.RedesSociais)
+                .WithOne(R => R.Palestrante)
+                .HasForeignKey(R => R.PalestranteId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Cascade);
+
+                builder.HasMany(P => P.EventosPalestrantes)
+                .WithOne(EP => EP.Palestrante)
+                .HasForeignKey(EP => EP.PalestranteId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            }
+        }
+    }
     ```
+    5. **EventoPalestranteConfiguration.cs**
+     ```csharp
+    using Domain.entities;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+    namespace Persistence.Configurations
+    {
+        public class EventoPalestranteConfiguration : IEntityTypeConfiguration<EventoPalestrante>
+        {
+            public void Configure(EntityTypeBuilder<EventoPalestrante> builder)
+            {
+                builder.HasKey(EP => new { EP.EventoId, EP.PalestranteId });
+
+                builder.HasOne(EP => EP.Evento)
+                .WithMany(E => E.EventosPalestrantes)
+                .HasForeignKey(EP => EP.EventoId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+
+                builder.HasOne(EP => EP.Palestrante)
+                .WithMany(E => E.EventosPalestrantes)
+                .HasForeignKey(EP => EP.PalestranteId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+            }
+        }
+    }
+    ```
 ---
 
 ### Application
@@ -466,3 +574,136 @@ namespace Persistence.Context
         dotnet add .\Application\ reference .\Domain\
         dotnet add .\Application\ reference .\Persistence\
        ```
+2. Iremos adicionar agora a lib para suportar as DTOs dentro da nossa camada de application, adicione o seguinte pacote:
+```csharp
+ <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+```
+
+3. Criar Diretório DTOs e Helpers, para iniciar a integração da lib DTO em nosso projeto assim podemos tratar os objetos para retornar apenas o necessario para o cliente e não todas as informações contidas neles.
+
+4. Iniciaremos criando as DTOs, como está abaixo: Application/DTOs/
+
+    1.  **EventoDTO.cs**
+    ```csharp
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+
+    namespace ProEventos.Application.Dtos
+    {
+        public class EventoDTO
+        {
+            public int Id { get; set; }
+            public string Local { get; set; }
+            public string DataEvento { get; set; }
+
+            [Required(ErrorMessage = "O campo {0} é obrigtório."),
+             //MinLength(3, ErrorMessage = "{0} deve ter no mínimo 4 caracteres."),
+             //MaxLength(50, ErrorMessage = "{0} deve ter no máximo 50 caracteres.")
+             StringLength(50, MinimumLength = 3,
+                              ErrorMessage = "Intervalo permitido de 3 a 50 caracteres.")]
+            public string Tema { get; set; }
+
+
+            [Display(Name = "Qtd Pessoas")]
+            [Range(1, 120000, ErrorMessage = "{0} não pode ser menor que 1 e maior que 120.000")]
+            public int QtdPessoas { get; set; }
+
+            [RegularExpression(@".*\.(gif|jpe?g|bmp|png)$",
+                               ErrorMessage = "Não é uma imagem válida. (gif, jpg, jpeg, bmp ou png)")]
+            public string ImagemURL { get; set; }
+
+            [Required(ErrorMessage = "O campo {0} é obrigatório")]
+            [Phone(ErrorMessage = "O campo {0} está com número inválido")]
+            public string Telefone { get; set; }
+
+            [Required(ErrorMessage = "O campo {0} é obrigatório")]
+            [Display(Name = "e-mail")]
+            [EmailAddress(ErrorMessage = "É necessário ser um {0} válido")]
+            public string Email { get; set; }
+
+            public int UserId { get; set; }
+            public UserDto UserDto { get; set; }
+
+            public IEnumerable<LoteDto> Lotes { get; set; } = new List<LoteDTo>();
+            public IEnumerable<RedeSocialDto> RedesSociais { get; set; } = new List<RedeSocialDto>();
+            public IEnumerable<PalestranteDto> Palestrantes { get; set; } = new List<PalestranteDto>();
+        }
+    }
+    ```
+    2. **LoteDTO.cs**
+    ```csharp
+    namespace ProEventos.Application.Dtos
+    {
+        public class LoteDTO
+        {
+            public int Id { get; set; }
+            public string Nome { get; set; }
+            public decimal Preco { get; set; }
+            public string DataInicio { get; set; }
+            public string DataFim { get; set; }
+            public int Quantidade { get; set; }
+            public int EventoId { get; set; }
+            public EventoDto EventoDto { get; set; }
+        }
+    }
+    ```
+    3. **RedeSocialDTO.cs**
+    ```csharp
+    namespace ProEventos.Application.Dtos
+    {
+        public class RedeSocialDTO
+        {
+            public int Id { get; set; }
+            public string Nome { get; set; }
+            public string URL { get; set; }
+            public int? EventoId { get; set; }
+            public EventoDto Evento { get; set; }
+            public int? PalestranteId { get; set; }
+            public PalestranteDto Palestrante { get; set; }
+        }
+    }
+    ```
+    4. **PalestranteDTO.cs**
+    ```csharp
+    namespace Domain.entities
+    {
+        public class PalestranteDTO
+        {
+            public int Id { get; set; }        
+            public string Nome { get; set; }
+            public string MiniCurriculo { get; set; }
+            public IEnumerable<RedeSocial> RedesSociais { get; set; } = new List<RedeSocial>();
+            public IEnumerable<EventoPalestrante> EventosPalestrantes { get; set; } = new List<EventoPalestrante>();
+        }
+    }    
+    ```
+
+    5. Agora iremos configurar o Helpers para mapear a qual Entidades as DTOs irão apontar, segue a configuração dos arquivos no diretório: Application/Helpers:
+
+    1. **ProEventosProfile.cs**
+    ```csharp
+    using AutoMapper;
+    using ProEventos.Domain.Entities; // Namespace da entidade Evento
+    using ProEventos.Application.Dtos; // Namespace do DTO EventoDto
+    
+    namespace ProEventos.API.Helpers
+    {
+        public class ProEventosProfile : Profile
+        {
+            public ProEventosProfile()
+            {
+                // Mapeamento entre Evento e EventoDTO
+                CreateMap<Evento, EventoDTO>()
+                    // Isso apenas será necessario caso o tipo de uma respectiva propriedade da DTO for diferente do tipo da Entidade como no exemplo abaixo.
+                    .ForMember(dest => dest.DataEvento, opt => opt.MapFrom(src => src.dataEvento.HasValue ? src.dataEvento.Value.ToString("yyyy-MM-dd") : null))
+                    .ReverseMap()
+                    .ForMember(dest => dest.dataEvento, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.DataEvento) ? (DateTime?)null : DateTime.Parse(src.DataEvento)));
+    
+                // Exemplo de outros mapeamentos (Lote, RedeSocial, etc.)
+                CreateMap<Lote, LoteDTO>().ReverseMap();
+                CreateMap<RedeSocial, RedeSocialDTO>().ReverseMap();
+            }
+        }
+    }
+    ```
+    5. 
