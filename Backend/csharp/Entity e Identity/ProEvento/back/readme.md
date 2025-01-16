@@ -144,30 +144,31 @@ Permite uso do SQL Server como provedor de banco no EF Core.
 
 ---
 
+### 4. Criando Camada de Aplicação
+
 proximo passo é criar o contexto da aplicação, tanto repositorio como classe,
 
 1. crie uma pasta chamada **Context** dentro da camada Persistence.
     1. criar uma nova classe chamada ProEventoContext.
-    2. dentro dela teremos um codigo como este no momento:
+ dentro dela teremos um codigo como este no momento:
+    ```csharp
+    using Domain.entities;
+    using Microsoft.EntityFrameworkCore;
 
-```csharp
-using Domain.entities;
-using Microsoft.EntityFrameworkCore;
-
-namespace Persistence.Context
-{
-    public class ProEventoContext : DbContext
+    namespace Persistence.Context
     {
-        public ProEventoContext(DbContextOptions<ProEventoContext> options) : base(options) { }
+        public class ProEventoContext : DbContext
+        {
+            public ProEventoContext(DbContextOptions<ProEventoContext> options) : base(options) { }
 
-        public DbSet<Evento> Eventos { get; set; } 
-        public DbSet<Lote> Lotes { get; set; }
-        public DbSet<RedeSocial> RedesSociais { get; set; }
-        public DbSet<Palestrante> Palestrantes { get; set; }
-        public DbSet<EventoPalestrante> EventosPalestrantes { get; set; }
+            public DbSet<Evento> Eventos { get; set; } 
+            public DbSet<Lote> Lotes { get; set; }
+            public DbSet<RedeSocial> RedesSociais { get; set; }
+            public DbSet<Palestrante> Palestrantes { get; set; }
+            public DbSet<EventoPalestrante> EventosPalestrantes { get; set; }
+        }
     }
-}
-```
+    ```
 2. Gerar as Interfaces de contrato, agora iremos criar o diretório chamado **Contracts** e dentro dela gerar os seguintes arquivos com os código que estão listado a baixo.
 
     1. **/Contracts/** gere as Interfaces **IGeralPersistence, IEventoPersistence, IPalestrantePersistence**
@@ -365,7 +366,7 @@ namespace Persistence.Context
     ```
 ---
 
-### FluenteAPI
+### 5. FluenteAPI
 
 #### Aproveitando que finalizamos a primeira parte da persistencia iremos ja adicionar a configuração do FluenteAPI manualmente, isso nos dara um total controle de como queremos que as tabelas e as propriedades se comportem no banco de dados.
 
@@ -565,19 +566,19 @@ namespace Persistence.Context
     ```
 ---
 
-### Application
+### 6. Application
 
 #### Agora partiremos para application com o intuito de criar também as Interfaces de serviço, o serviço e também as DTOs para termos um controle nos objetos de retorno para o cliente, nela também faremos assinaturas das interfaces que está presente na Persistencia e utilizaremos de entidades do dominio, então inicialmente iremos adicionar referencia das outras classlib para ela.
 
 1. Inicialmente iremos adicionar referencias das classlib de **Persistencia** e **Domain** para a nossa **Application**, siga com o comando abaixo
-    1. ```csharp
-        dotnet add .\Application\ reference .\Domain\
-        dotnet add .\Application\ reference .\Persistence\
-       ```
+    ```csharp
+    dotnet add .\Application\ reference .\Domain\
+    dotnet add .\Application\ reference .\Persistence\
+     ```
 2. Iremos adicionar agora a lib para suportar as DTOs dentro da nossa camada de application, adicione o seguinte pacote:
-```csharp
- <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-```
+    ```csharp
+    <PackageReference Include="AutoMapper.Extensions.Microsoft. DependencyInjection" Version="12.0.1" />
+    ```
 
 3. Criar Diretório DTOs e Helpers, para iniciar a integração da lib DTO em nosso projeto assim podemos tratar os objetos para retornar apenas o necessario para o cliente e não todas as informações contidas neles.
 
@@ -678,7 +679,7 @@ namespace Persistence.Context
     }    
     ```
 
-    5. Agora iremos configurar o Helpers para mapear a qual Entidades as DTOs irão apontar, segue a configuração dos arquivos no diretório: Application/Helpers:
+5. Agora iremos configurar o Helpers para mapear a qual Entidades as DTOs irão apontar, segue a configuração dos arquivos no diretório: Application/Helpers:
 
     1. **ProEventosProfile.cs**
     ```csharp
@@ -706,4 +707,334 @@ namespace Persistence.Context
         }
     }
     ```
-    5. 
+
+6. Criando o contrato do serviço no diretório **/Application/Contracts/** criaremos o contrato para Evento e Palestrante como segue nas imagens abaixo:
+    1. **IEventoService.cs**
+        ```csharp
+        using Domain.entities;
+
+        namespace Application.Contracts
+        {
+            public interface IEventoService
+            {
+                public Task<EventoDTO> AddEvento(Evento model);
+                public Task<EventoDTO> UpdateEvento(int EventoId,Evento model);
+                public Task<bool> DeleteEvento(int EventoId);
+                public Task<EventoDTO[]> GetAllEventosAsync(bool IncludePalestrante = false);
+                public Task<EventoDTO[]> GetAllEventosByTemaAsync( string Tema,bool IncludePalestrante = false);
+                public Task<EventoDTO> GetEventoByIdAsync(int Id, bool IncludePalestrante = false);        
+            }
+        }
+        ```
+    2. **IPalestranteService.cs**
+        ```csharp
+        using Application.DTOs;
+        using Domain.entities;
+
+        namespace Application.Contracts
+        {
+            public interface IPalestranteService
+            {
+                public Task<PalestranteDTO> AddPalestrante(Palestrante model);
+                public Task<PalestranteDTO> UpdatePalestrante(int PalestranteId, Palestrante model);
+                public Task<PalestranteDTO> DeletePalestrante(int PalestranteId);
+                public Task<PalestranteDTO[]> GetAllPalestrantesAsync(bool IncludeEvento = false);
+                public Task<PalestranteDTO[]> GetAllPalestrantesByNameAsync(string Name, bool IncludeEvento = false);
+                public Task<PalestranteDTO> GetPalestranteByIdAsync(int Id, bool IncludeEvento = false);
+            }
+        }
+        ```
+7. Agora iniciando as classes de Serviço no qual iremos herdar das interfaces criadas acima, criaremos o diretório: Application/Service, e aqui criaremos os arquivos abaixo:
+
+    1. **EventoService.cs**
+        ```csharp
+        using AutoMapper;
+        using Domain.entities;
+        using Application.DTOs;
+        using Application.Contracts;
+        using Persistence.Contracts;
+
+        namespace Application.Services
+        {
+            public class EventoService : IEventoService
+            {
+                private readonly IMapper _mapper;
+                private readonly IGeralPersist geralPersist;
+                private readonly IEventoPersist eventoPersist;
+                public EventoService(IMapper _mapper,
+                                     IGeralPersist geralPersist,
+                                     IEventoPersist eventoPersist)
+                {
+                    this._mapper = _mapper;
+                    this.geralPersist = geralPersist;
+                    this.eventoPersist = eventoPersist;
+                }
+                public async Task<EventoDTO> AddEvento(Evento model)
+                {
+                    try
+                    {
+                        if(model == null) throw new Exception("Objeto Nulo ou inválido");
+                        var evento = _mapper.Map<Evento>(model);
+                        geralPersist.Add(evento);
+
+                        if(await geralPersist.SaveChangesAsync())
+                        {
+                            var eventoRetorno = await eventoPersist.GetEventoByIdAsync(model.Id);
+                            return _mapper.Map<EventoDTO>(eventoRetorno);
+                        }
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"Erro ao persistir o cadastro do evento: {ex.Message}");
+                    }
+                }
+
+                public async Task<EventoDTO> UpdateEvento(int EventoId, Evento model)
+                {
+                    try
+                    {
+                        if(EventoId == null || model == null) throw new Exception("Erro ao Persistir atualização do Evento, EventoID ou Evento Inválido");
+                        geralPersist.Update(model);
+
+                        if(await geralPersist.SaveChangesAsync())
+                        {
+                            var eventoRetorno = await eventoPersist.GetEventoByIdAsync(EventoId);
+                            return _mapper.Map<EventoDTO>(eventoRetorno);
+                        }
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"Erro ao persistir atualização do evento: {ex.Message}");
+                    }
+                }
+
+                public async Task<bool> DeleteEvento(int EventoId)
+                {
+                    try
+                    {
+                        if(EventoId == null) throw new Exception("Erro ao Deletar Evento, ID Inválido ou inexistente.");
+                        var evento = await eventoPersist.GetEventoByIdAsync(EventoId);
+                        geralPersist.Delete(evento);
+
+                        if(await geralPersist.SaveChangesAsync()) 
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"Erro ao persistir a deleção do Evento: {ex.Message}");
+                    }
+                }
+
+                public async Task<EventoDTO[]> GetAllEventosAsync(bool IncludePalestrante = false)
+                {
+                    try
+                    {
+                        var eventosRetorno = await eventoPersist.GetAllEventosAsync(IncludePalestrante);
+                        return _mapper.Map<EventoDTO[]>(eventosRetorno);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"Erro ao recuperar todos os Eventos: {ex.Message}");
+                    }
+                }
+
+                public async Task<EventoDTO[]> GetAllEventosByTemaAsync(string Tema, bool IncludePalestrante = false)
+                {
+                    try
+                    {
+                        if(Tema == null) throw new Exception("Erro ao recuperar Eventos por Tema, pois o campo está Nulo");
+                        var eventosRetorno = await eventoPersist.GetAllEventosByTemaAsync(Tema);
+                        return _mapper.Map<EventoDTO[]>(eventosRetorno);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"Erro ao recuperar Evento por Tema: {ex.Message}");
+                    }
+                }
+
+                public async Task<EventoDTO> GetEventoByIdAsync(int Id, bool IncludePalestrante = false)
+                {
+                    try
+                    {
+                        if(Id == 0 || Id == null) throw new Exception("Erro ao recuperar Evento por ID: ID Inválido ou inexistente");
+                        var eventoRetorno = await eventoPersist.GetEventoByIdAsync(Id);
+                        return _mapper.Map<EventoDTO>(eventoRetorno);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"Erro ao recuperar Evento: {ex.Message}");
+                    }
+                }
+            }
+        }
+        ```
+    2. **PalestranteService.cs**
+        ```csharp
+        using AutoMapper;
+        using Domain.entities;
+        using Application.DTOs;
+        using Application.Contracts;
+        using Persistence.Contracts;
+        using Persistence.Repositories;
+
+        namespace Application.Services
+        {
+            public class PalestranteService : IPalestranteService
+            {
+                private readonly IMapper _mapper;
+                private readonly IGeralPersist geralPersist;
+                private readonly IPalestrantePersist palestrantePersist;
+                public PalestranteService(IMapper _mapper,
+                                          IGeralPersist geralPersist,
+                                          IPalestrantePersist palestrantePersist)
+                {
+                    this._mapper = _mapper;
+                    this.geralPersist = geralPersist;
+                    this.palestrantePersist = palestrantePersist;        
+                }
+
+                public async Task<PalestranteDTO> AddPalestrante(Palestrante model)
+                {
+                    try
+                    {
+                        if(model == null) throw new Exception("Modelo inválido para persistir o registro.");
+                        geralPersist.Add(model);
+
+                        if(await geralPersist.SaveChangesAsync()) 
+                        {
+                            var palestranteRetorno  = await palestrantePersist.GetPalestranteByIdAsync(model.Id);
+                            return _mapper.Map<PalestranteDTO>(palestranteRetorno);
+                        }
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {   
+                        throw new Exception($"Erro ao Persistir cadastro do palestrante: {ex.Message}");
+                    }
+                }
+
+                public async Task<PalestranteDTO> UpdatePalestrante(int PalestranteId, Palestrante model)
+                {
+                    try
+                    {
+                        if (model == null || PalestranteId == null || PalestranteId <= 0) throw new Exception("Erro ao alterar Palestrante, ID inválido ou Objeto Inconsistente");
+
+                        var palestrante = await palestrantePersist.GetPalestranteByIdAsync(PalestranteId);
+                        if(palestrante.Id != model.Id) throw new Exception("ID fornecido não bate com ID do objeto para ser alterado");
+                        geralPersist.Update(model);
+
+                        if(await geralPersist.SaveChangesAsync())
+                        {
+                            var palestranteRetorno = await palestrantePersist.GetPalestranteByIdAsync(PalestranteId);
+                            return _mapper.Map<PalestranteDTO>(palestranteRetorno);
+                        }
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"Erro ao Alterar o Palestrante: {ex.Message}");
+                    }
+                }
+
+                public async Task<bool> DeletePalestrante(int PalestranteId)
+                {
+                    try
+                    {
+                        if(PalestranteId == null || PalestranteId < 0) throw new Exception("ID Nulo ou Inexistente");
+                        var palestrante = await palestrantePersist.GetPalestranteByIdAsync(PalestranteId);
+                        if(palestrante != null) throw new Exception("ID Inexistente para exclusão");
+                        geralPersist.Delete(palestrante);
+
+                        if(await geralPersist.SaveChangesAsync())
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
+                    catch (Exception ex)
+                    {
+
+                        throw new Exception($"Erro ao persistir exclusão do palestrante: {ex.Message}");
+                    }
+                }
+
+                public async Task<PalestranteDTO[]> GetAllPalestrantesAsync(bool IncludeEvento = false)
+                {
+                    try
+                    {
+                        var palestrantes = await palestrantePersist.GetAllPalestrantesAsync();
+                        var palestrantesRetorno = _mapper.Map<PalestranteDTO[]>(palestrantes);
+                        return palestrantesRetorno;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"Erro ao Recuperar palestrantes: {ex.Message}");
+                    }
+                }
+
+                public async Task<PalestranteDTO[]> GetAllPalestrantesByNameAsync(string Name, bool IncludeEvento = false)
+                {
+                    try
+                    {   
+                        if(Name == null) throw new Exception("Erro ao recuperar Palestrante: nome Nulo");
+                        var palestrantesRetorno = await palestrantePersist.GetAllPalestrantesByNameAsync(Name);
+                        return _mapper.Map<PalestranteDTO[]>(palestrantesRetorno);
+                    }
+                    catch (Exception ex)
+                    { 
+                        throw new Exception($"Erro ao Recuperar Palestrantes Pelo Nome: {ex.Message}");
+                    }
+                }
+
+                public async Task<PalestranteDTO> GetPalestranteByIdAsync(int Id, bool IncludeEvento = false)
+                {
+                    try
+                    {
+                        if(Id == null || Id < 0) throw new Exception("Erro ao reucuperar Usuario ID Inexistente");
+                        var palestrante = await palestrantePersist.GetPalestranteByIdAsync(Id);
+                        return _mapper.Map<PalestranteDTO>(palestrante);
+                    }
+                    catch (Exception ex)
+                    {     
+                        throw new Exception($"Erro ao Recuperar Palestrante: {ex.Message}");
+                    }
+                }
+            }
+        }
+        ```
+por momento nossa Application já estara respondendo a nossa API, e agora o próximo passo sera adicionar a camada de API para iniciar as comunicações via requisições http,
+
+---
+
+### 7. API
+
+nesta camada iremos inicalmente criar nossa API, seguimos com o seguinte codigo via terminal dentro do diretorio **back**: 
+```csharp
+    dotnet new webapi -n ProEvento.API
+```
+
+seguiremos adicionando o novo projeto a solução ja criada, e seguiremos com o comando:
+```csharp
+    dotnet sln .\ProEvento.sln add .\API\
+```
+
+próximo passo sera adicionar as referencias necessarias a API que seria a camada de **Aplicação** e camada de **Persistencia**
+```csharp
+dotnet add .\API\ reference .\Application\
+dotnet add .\API\ reference .\Persistence\
+```
+
+1.  Adicionando as dependencias necessarias para rodar a API:
+```csharp
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.1" />
+```
+
+2. Configurando o **Program.cs**
+```csharp
+
+```

@@ -32,3 +32,7 @@ C:\Users\gabriel.guerra\Desktop\Estudo\Backend\csharp\Entity e Identity\ProEvent
 C:\Users\gabriel.guerra\Desktop\Estudo\Backend\csharp\Entity e Identity\ProEvento\back\API\obj\Debug\net9.0\API.pdb
 C:\Users\gabriel.guerra\Desktop\Estudo\Backend\csharp\Entity e Identity\ProEvento\back\API\obj\Debug\net9.0\API.genruntimeconfig.cache
 C:\Users\gabriel.guerra\Desktop\Estudo\Backend\csharp\Entity e Identity\ProEvento\back\API\obj\Debug\net9.0\ref\API.dll
+C:\Users\gabriel.guerra\Desktop\Estudo\Backend\csharp\Entity e Identity\ProEvento\back\API\bin\Debug\net9.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\gabriel.guerra\Desktop\Estudo\Backend\csharp\Entity e Identity\ProEvento\back\API\bin\Debug\net9.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\gabriel.guerra\Desktop\Estudo\Backend\csharp\Entity e Identity\ProEvento\back\API\bin\Debug\net9.0\Newtonsoft.Json.dll
+C:\Users\gabriel.guerra\Desktop\Estudo\Backend\csharp\Entity e Identity\ProEvento\back\API\bin\Debug\net9.0\Newtonsoft.Json.Bson.dll

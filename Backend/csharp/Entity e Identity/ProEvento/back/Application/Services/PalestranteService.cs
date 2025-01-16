@@ -1,85 +1,130 @@
-using Application.Contracts;
+using AutoMapper;
 using Domain.entities;
+using Application.DTOs;
+using Application.Contracts;
+using Persistence.Contracts;
+using Persistence.Repositories;
 
 namespace Application.Services
 {
-    public class PalestranteService : IEventoService
+    public class PalestranteService : IPalestranteService
     {
-        public Task<Evento> AddEvento(Evento model)
+        private readonly IMapper _mapper;
+        private readonly IGeralPersist geralPersist;
+        private readonly IPalestrantePersist palestrantePersist;
+        public PalestranteService(IMapper _mapper,
+                                  IGeralPersist geralPersist,
+                                  IPalestrantePersist palestrantePersist)
+        {
+            this._mapper = _mapper;
+            this.geralPersist = geralPersist;
+            this.palestrantePersist = palestrantePersist;        
+        }
+
+        public async Task<PalestranteDTO> AddPalestrante(Palestrante model)
         {
             try
             {
-                
+                if(model == null) throw new Exception("Modelo inválido para persistir o registro.");
+                geralPersist.Add(model);
+
+                if(await geralPersist.SaveChangesAsync()) 
+                {
+                    var palestranteRetorno  = await palestrantePersist.GetPalestranteByIdAsync(model.Id);
+                    return _mapper.Map<PalestranteDTO>(palestranteRetorno);
+                }
+                return null;
             }
-            catch (System.Exception)
-            {
-                
-                throw;
+            catch (Exception ex)
+            {   
+                throw new Exception($"Erro ao Persistir cadastro do palestrante: {ex.Message}");
             }
         }
 
-        public Task<bool> DeleteEvento(int EventoId)
+        public async Task<PalestranteDTO> UpdatePalestrante(int PalestranteId, Palestrante model)
         {
             try
             {
-                
+                if (model == null || PalestranteId == null || PalestranteId <= 0) throw new Exception("Erro ao alterar Palestrante, ID inválido ou Objeto Inconsistente");
+
+                var palestrante = await palestrantePersist.GetPalestranteByIdAsync(PalestranteId);
+                if(palestrante.Id != model.Id) throw new Exception("ID fornecido não bate com ID do objeto para ser alterado");
+                geralPersist.Update(model);
+
+                if(await geralPersist.SaveChangesAsync())
+                {
+                    var palestranteRetorno = await palestrantePersist.GetPalestranteByIdAsync(PalestranteId);
+                    return _mapper.Map<PalestranteDTO>(palestranteRetorno);
+                }
+                return null;
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                
-                throw;
+                throw new Exception($"Erro ao Alterar o Palestrante: {ex.Message}");
             }
         }
 
-        public Task<Evento[]> GetAllEventosAsync(bool IncludePalestrante = false)
+        public async Task<bool> DeletePalestrante(int PalestranteId)
         {
             try
             {
-                
+                if(PalestranteId == null || PalestranteId < 0) throw new Exception("ID Nulo ou Inexistente");
+                var palestrante = await palestrantePersist.GetPalestranteByIdAsync(PalestranteId);
+                if(palestrante != null) throw new Exception("ID Inexistente para exclusão");
+                geralPersist.Delete(palestrante);
+
+                if(await geralPersist.SaveChangesAsync())
+                {
+                    return true;
+                }
+                return false;
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
                 
-                throw;
+                throw new Exception($"Erro ao persistir exclusão do palestrante: {ex.Message}");
             }
         }
 
-        public Task<Evento[]> GetAllEventosByTemaAsync(string Tema, bool IncludePalestrante = false)
+        public async Task<PalestranteDTO[]> GetAllPalestrantesAsync(bool IncludeEvento = false)
         {
             try
             {
-                
+                var palestrantes = await palestrantePersist.GetAllPalestrantesAsync();
+                var palestrantesRetorno = _mapper.Map<PalestranteDTO[]>(palestrantes);
+                return palestrantesRetorno;
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                
-                throw;
+                throw new Exception($"Erro ao Recuperar palestrantes: {ex.Message}");
             }
         }
 
-        public Task<Evento> GetEventoByIdAsync(int Id, bool IncludePalestrante = false)
+        public async Task<PalestranteDTO[]> GetAllPalestrantesByNameAsync(string Name, bool IncludeEvento = false)
         {
             try
-            {
-                
+            {   
+                if(Name == null) throw new Exception("Erro ao recuperar Palestrante: nome Nulo");
+                var palestrantesRetorno = await palestrantePersist.GetAllPalestrantesByNameAsync(Name);
+                return _mapper.Map<PalestranteDTO[]>(palestrantesRetorno);
             }
-            catch (System.Exception)
-            {
-                
-                throw;
+            catch (Exception ex)
+            { 
+                throw new Exception($"Erro ao Recuperar Palestrantes Pelo Nome: {ex.Message}");
             }
         }
 
-        public Task<Evento> UpdateEvento(int EventoId, Evento evento)
+        public async Task<PalestranteDTO> GetPalestranteByIdAsync(int Id, bool IncludeEvento = false)
         {
             try
             {
-                
+                if(Id == null || Id < 0) throw new Exception("Erro ao reucuperar Usuario ID Inexistente");
+                var palestrante = await palestrantePersist.GetPalestranteByIdAsync(Id);
+                return _mapper.Map<PalestranteDTO>(palestrante);
             }
-            catch (System.Exception)
-            {
-                
-                throw;
+            catch (Exception ex)
+            {     
+                throw new Exception($"Erro ao Recuperar Palestrante: {ex.Message}");
             }
         }
     }

@@ -1,28 +1,36 @@
-using Application.Contracts;
+using AutoMapper;
 using Domain.entities;
+using Application.DTOs;
+using Application.Contracts;
 using Persistence.Contracts;
 
 namespace Application.Services
 {
     public class EventoService : IEventoService
     {
+        private readonly IMapper _mapper;
         private readonly IGeralPersist geralPersist;
         private readonly IEventoPersist eventoPersist;
-        public EventoService(IGeralPersist geralPersist, IEventoPersist eventoPersist)
+        public EventoService(IMapper _mapper,
+                             IGeralPersist geralPersist,
+                             IEventoPersist eventoPersist)
         {
+            this._mapper = _mapper;
             this.geralPersist = geralPersist;
             this.eventoPersist = eventoPersist;
         }
-        public async Task<Evento> AddEvento(Evento model)
+        public async Task<EventoDTO> AddEvento(Evento model)
         {
             try
             {
                 if(model == null) throw new Exception("Objeto Nulo ou inválido");
-                geralPersist.Add(model);
+                var evento = _mapper.Map<Evento>(model);
+                geralPersist.Add(evento);
 
                 if(await geralPersist.SaveChangesAsync())
                 {
-                    await eventoPersist.GetEventoByIdAsync(model.Id);
+                    var eventoRetorno = await eventoPersist.GetEventoByIdAsync(model.Id);
+                    return _mapper.Map<EventoDTO>(eventoRetorno);
                 }
                 return null;
             }
@@ -32,16 +40,17 @@ namespace Application.Services
             }
         }
 
-        public async Task<Evento> UpdateEvento(int EventoId, Evento evento)
+        public async Task<EventoDTO> UpdateEvento(int EventoId, Evento model)
         {
             try
             {
-                if(EventoId == null || evento == null) throw new Exception("Erro ao Persistir atualização do Evento, EventoID ou Evento Inválido");
-                geralPersist.Update(evento);
+                if(EventoId == null || model == null) throw new Exception("Erro ao Persistir atualização do Evento, EventoID ou Evento Inválido");
+                geralPersist.Update(model);
 
                 if(await geralPersist.SaveChangesAsync())
                 {
-                    return await eventoPersist.GetEventoByIdAsync(EventoId);
+                    var eventoRetorno = await eventoPersist.GetEventoByIdAsync(EventoId);
+                    return _mapper.Map<EventoDTO>(eventoRetorno);
                 }
                 return null;
             }
@@ -71,12 +80,12 @@ namespace Application.Services
             }
         }
 
-        public async Task<Evento[]> GetAllEventosAsync(bool IncludePalestrante = false)
+        public async Task<EventoDTO[]> GetAllEventosAsync(bool IncludePalestrante = false)
         {
             try
             {
-                var eventos = await eventoPersist.GetAllEventosAsync(IncludePalestrante);
-                return eventos;
+                var eventosRetorno = await eventoPersist.GetAllEventosAsync(IncludePalestrante);
+                return _mapper.Map<EventoDTO[]>(eventosRetorno);
             }
             catch (Exception ex)
             {
@@ -84,13 +93,13 @@ namespace Application.Services
             }
         }
 
-        public async Task<Evento[]> GetAllEventosByTemaAsync(string Tema, bool IncludePalestrante = false)
+        public async Task<EventoDTO[]> GetAllEventosByTemaAsync(string Tema, bool IncludePalestrante = false)
         {
             try
             {
                 if(Tema == null) throw new Exception("Erro ao recuperar Eventos por Tema, pois o campo está Nulo");
-                var eventos = await eventoPersist.GetAllEventosByTemaAsync(Tema);
-                return eventos;
+                var eventosRetorno = await eventoPersist.GetAllEventosByTemaAsync(Tema);
+                return _mapper.Map<EventoDTO[]>(eventosRetorno);
             }
             catch (Exception ex)
             {
@@ -98,13 +107,13 @@ namespace Application.Services
             }
         }
 
-        public async Task<Evento> GetEventoByIdAsync(int Id, bool IncludePalestrante = false)
+        public async Task<EventoDTO> GetEventoByIdAsync(int Id, bool IncludePalestrante = false)
         {
             try
             {
                 if(Id == 0 || Id == null) throw new Exception("Erro ao recuperar Evento por ID: ID Inválido ou inexistente");
-                var evento = await eventoPersist.GetEventoByIdAsync(Id);
-                return evento;
+                var eventoRetorno = await eventoPersist.GetEventoByIdAsync(Id);
+                return _mapper.Map<EventoDTO>(eventoRetorno);
             }
             catch (Exception ex)
             {
