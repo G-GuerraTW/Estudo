@@ -10,8 +10,8 @@ namespace Persistence.Configurations
         {
             builder.ToTable("RedeSocial");
             builder.HasKey(R => R.Id);
-            builder.Property(R => R.Nome).HasColumnType("VARCHAR(150)");
-            builder.Property(R => R.URL).HasColumnType("VARCHAR(500)");
+            builder.Property(R => R.Nome).HasColumnType("TEXT");
+            builder.Property(R => R.URL).HasColumnType("TEXT");
             
             builder.HasOne(R => R.Evento)
             .WithMany(E => E.RedesSociais)

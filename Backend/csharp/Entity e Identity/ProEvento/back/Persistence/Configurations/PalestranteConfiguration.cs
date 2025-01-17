@@ -9,8 +9,8 @@ namespace Persistence.Configurations
         {
             builder.ToTable("Palestrante");
             builder.HasKey(P => P.Id);
-            builder.Property(P => P.Nome).HasColumnType("VARCHAR(150)");
-            builder.Property(P => P.MiniCurriculo).HasColumnType("VARCHAR(600)");
+            builder.Property(P => P.Nome).HasColumnType("TEXT");
+            builder.Property(P => P.MiniCurriculo).HasColumnType("TEXT");
             
             builder.HasMany(P => P.RedesSociais)
             .WithOne(R => R.Palestrante)

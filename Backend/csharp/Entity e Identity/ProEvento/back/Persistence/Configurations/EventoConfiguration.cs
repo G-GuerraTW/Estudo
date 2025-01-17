@@ -9,13 +9,13 @@ namespace Persistence.Configurations
         {
             builder.ToTable("Evento");
             builder.HasKey(E => E.Id);
-            builder.Property(E => E.Local).HasColumnType("VARCHAR(200)");
-            builder.Property(E => E.Tema).HasColumnType("VARCHAR(200)");
-            builder.Property(E => E.DataEvento).HasColumnType("DATETIME()");
-            builder.Property(E => E.QtdPessoas).HasColumnType("INT(4)");
-            builder.Property(E => E.ImagemURL).HasColumnType("VARCHAR(400)");
-            builder.Property(E => E.Telefone).HasColumnType("VARCHAR(20)");
-            builder.Property(E => E.Email).HasColumnType("VARCHAR(100)");
+            builder.Property(E => E.Local).HasColumnType("TEXT");
+            builder.Property(E => E.Tema).HasColumnType("TEXT");
+            builder.Property(E => E.DataEvento).HasColumnType("DATETIME");
+            builder.Property(E => E.QtdPessoas).HasColumnType("INTEGER");
+            builder.Property(E => E.ImagemURL).HasColumnType("TEXT");
+            builder.Property(E => E.Telefone).HasColumnType("TEXT");
+            builder.Property(E => E.Email).HasColumnType("TEXT");
 
             builder.HasMany(E => E.Lotes)
                 .WithOne(L => L.Evento)

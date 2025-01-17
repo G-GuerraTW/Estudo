@@ -1,5 +1,4 @@
 using Domain.entities;
-using Microsoft.Identity.Client;
 
 namespace Persistence.Contracts
 {

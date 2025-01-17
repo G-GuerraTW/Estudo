@@ -127,6 +127,7 @@ Agora iremos nos atentar ao arquivos Persistence.csproj no qual iremos adicionar
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0" />
 ```
 lembrando que o Package de banco de dados vc deve decidir qual irá utilizar.
 
@@ -1032,9 +1033,162 @@ dotnet add .\API\ reference .\Persistence\
 1.  Adicionando as dependencias necessarias para rodar a API:
 ```csharp
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
 ```
 
 2. Configurando o **Program.cs**
 ```csharp
+using Persistence.Context;
+using Persistence.Contracts;
+using Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
 
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddCors();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+//Add Scopeds
+builder.Services.AddScoped<IGeralPersist, GeralPersist>();
+builder.Services.AddScoped<IEventoPersist, EventoPersist>();
+builder.Services.AddScoped<IPalestrantePersist, PalestrantePersist>();
+
+builder.Services.AddDbContext<ProEventoContext>(options =>
+    options.UseSqlite("DATA Source=banco.db")
+);
+
+// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddOpenApi();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+}
+app.UseHttpsRedirection();
+app.Run();
+```
+Agora iremos iniciar a configuração de nossa primeira controller, a controller que sera responsavel pelas rotas dos Eventos, teremos outras controller também para outras entidades, commo por exmeplo Palestrante e Login.
+```csharp
+using Application.DTOs;
+using Application.Contracts;
+using Microsoft.AspNetCore.Mvc;
+
+namespace API.Controller
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class EventoController : ControllerBase
+    {
+        private readonly IEventoService _eventoSerivce;
+        public EventoController(IEventoService _eventoSerivce)
+        {
+            this._eventoSerivce = _eventoSerivce;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddEvento(EventoDTO model) 
+        {
+            try
+            {
+                if(model == null) return BadRequest("Erro ao tentar adicioanr evento");
+                var evento = await _eventoSerivce.AddEvento(model);
+                if(evento != null) return Ok(evento);
+                return BadRequest("Erro ao persistir cadastro ao banco");
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Erro ao tentar adicionar eventos. Erro: {ex.Message}"
+                );
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateEvento(int Id, EventoDTO model) 
+        {
+            var evento = await _eventoSerivce.UpdateEvento(Id, model);
+            if(evento == null) return BadRequest("Erro ao tentar adicionar evento");
+            return Ok(evento);
+        }
+                [HttpGet]
+        public async Task<IActionResult> GetEventos() 
+        {
+            try
+            {
+                var eventos = await _eventoSerivce.GetAllEventosAsync(false);
+                if (eventos == null) return NoContent();
+                return Ok(eventos);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Erro ao tentar recuperar eventos. Erro: {ex.Message}");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetEventoById(int id)
+        {
+            try
+            {
+                var eventos = await _eventoSerivce.GetEventoByIdAsync(id, false);
+                if(eventos == null) return NoContent();
+                return Ok(eventos);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Erro ao tentar recuperar eventos. Erro: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteEvento(int Id) 
+        {
+            try
+            {
+                if(Id == null || Id < 0) return BadRequest("Erro ao tentar deletar usuario");
+                var resultado = await _eventoSerivce.DeleteEvento(Id);
+
+                if(resultado) return Ok("Evento deletado");
+                return BadRequest("Evento não deletado");
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Erro ao tentar deletar eventos. Erro: {ex.Message}"
+                );
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetEventoByTema(string tema) 
+        {
+            try
+            {
+                var evento = await _eventoSerivce.GetAllEventosByTemaAsync(tema, false);
+                if(evento == null) return NoContent();
+                return Ok(evento);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Erro ao tenhtar recuperar eventos. Erro: {ex.Message}"
+                );
+            }
+        }
+    }
+}
+```
+
+e agora iremos criar a migration para gerar nosso banco com os comandos:
+```csharp
+    dotnet ef migrations add InitialCreate -p .\Persistence\ -s .\API\ // Para criar a primeiro migration por nome de InitialCreate
+    dotnet ef database update -p .\API\
 ```

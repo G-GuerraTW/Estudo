@@ -19,7 +19,7 @@ namespace Application.Services
             this.geralPersist = geralPersist;
             this.eventoPersist = eventoPersist;
         }
-        public async Task<EventoDTO> AddEvento(Evento model)
+        public async Task<EventoDTO> AddEvento(EventoDTO model)
         {
             try
             {
@@ -40,7 +40,7 @@ namespace Application.Services
             }
         }
 
-        public async Task<EventoDTO> UpdateEvento(int EventoId, Evento model)
+        public async Task<EventoDTO> UpdateEvento(int EventoId, EventoDTO model)
         {
             try
             {
