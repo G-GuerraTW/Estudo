@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "kaOkAq2Dvio=",
+  "dgSpecHash": "JkXI2QCa33Y=",
   "success": true,
   "projectFilePath": "C:\\Users\\GoatG\\Desktop\\Estudo\\Backend\\Csharp\\Entity e Identity\\ProEvento\\back\\API\\API.csproj",
   "expectedPackageFiles": [
@@ -9,7 +9,7 @@
     "C:\\Users\\GoatG\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\GoatG\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\9.0.1\\microsoft.aspnetcore.jsonpatch.9.0.1.nupkg.sha512",
     "C:\\Users\\GoatG\\.nuget\\packages\\microsoft.aspnetcore.mvc.newtonsoftjson\\9.0.1\\microsoft.aspnetcore.mvc.newtonsoftjson.9.0.1.nupkg.sha512",
-    "C:\\Users\\GoatG\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.0\\microsoft.aspnetcore.openapi.9.0.0.nupkg.sha512",
+    "C:\\Users\\GoatG\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.1\\microsoft.aspnetcore.openapi.9.0.1.nupkg.sha512",
     "C:\\Users\\GoatG\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\7.0.0\\microsoft.bcl.asyncinterfaces.7.0.0.nupkg.sha512",
     "C:\\Users\\GoatG\\.nuget\\packages\\microsoft.build.framework\\17.8.3\\microsoft.build.framework.17.8.3.nupkg.sha512",
     "C:\\Users\\GoatG\\.nuget\\packages\\microsoft.build.locator\\1.7.8\\microsoft.build.locator.1.7.8.nupkg.sha512",
@@ -46,6 +46,7 @@
     "C:\\Users\\GoatG\\.nuget\\packages\\sqlitepclraw.core\\2.1.10\\sqlitepclraw.core.2.1.10.nupkg.sha512",
     "C:\\Users\\GoatG\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.1.10\\sqlitepclraw.lib.e_sqlite3.2.1.10.nupkg.sha512",
     "C:\\Users\\GoatG\\.nuget\\packages\\sqlitepclraw.provider.e_sqlite3\\2.1.10\\sqlitepclraw.provider.e_sqlite3.2.1.10.nupkg.sha512",
+    "C:\\Users\\GoatG\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\7.2.0\\swashbuckle.aspnetcore.swaggerui.7.2.0.nupkg.sha512",
     "C:\\Users\\GoatG\\.nuget\\packages\\system.codedom\\6.0.0\\system.codedom.6.0.0.nupkg.sha512",
     "C:\\Users\\GoatG\\.nuget\\packages\\system.collections.immutable\\7.0.0\\system.collections.immutable.7.0.0.nupkg.sha512",
     "C:\\Users\\GoatG\\.nuget\\packages\\system.composition\\7.0.0\\system.composition.7.0.0.nupkg.sha512",

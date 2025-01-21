@@ -314,3 +314,4 @@ C:\Users\GoatG\Desktop\Estudo\Backend\Csharp\Entity e Identity\ProEvento\back\AP
 C:\Users\GoatG\Desktop\Estudo\Backend\Csharp\Entity e Identity\ProEvento\back\API\obj\Debug\net9.0\API.pdb
 C:\Users\GoatG\Desktop\Estudo\Backend\Csharp\Entity e Identity\ProEvento\back\API\obj\Debug\net9.0\API.genruntimeconfig.cache
 C:\Users\GoatG\Desktop\Estudo\Backend\Csharp\Entity e Identity\ProEvento\back\API\obj\Debug\net9.0\ref\API.dll
+C:\Users\GoatG\Desktop\Estudo\Backend\Csharp\Entity e Identity\ProEvento\back\API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll

@@ -30,13 +30,20 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+// Ensure database is deleted and recreated (only in development mode)
+if (app.Environment.IsDevelopment())
+{
+    var dbContext = app.Services.CreateScope().ServiceProvider.GetRequiredService<ProEventoContext>();
+    
+    // Deleta o banco de dados e recria
+    dbContext.Database.EnsureDeleted(); // Exclui o banco
+    dbContext.Database.EnsureCreated(); // Cria o banco novamente
 
-var dbContext = app.Services.CreateScope().ServiceProvider.GetRequiredService<ProEventoContext>();
-
-// Deleta o banco de dados e recria
-dbContext.Database.EnsureDeleted(); // Exclui o banco
-dbContext.Database.EnsureCreated(); // Cria o banco novamente
-app.MapOpenApi();
+    app.MapOpenApi();
+    app.UseSwaggerUI(options =>
+        options.SwaggerEndpoint("/openapi/v1.json", "ProEvento API")
+    );
+}
 
 app.Run();
 

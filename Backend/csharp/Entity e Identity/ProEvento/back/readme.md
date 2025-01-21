@@ -1034,6 +1034,7 @@ dotnet add .\API\ reference .\Persistence\
 ```csharp
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+	<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.2.0" />
 ```
 
 2. Configurando o **Program.cs**
