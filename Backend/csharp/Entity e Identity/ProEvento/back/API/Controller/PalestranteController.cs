@@ -1,5 +1,5 @@
-using Application.Contracts;
 using Application.DTOs;
+using Application.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controller
@@ -40,6 +40,23 @@ namespace API.Controller
             return Ok(palestrante);
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePalestrante(int id)
+        {
+            try
+            {
+                if (id <= 0) return BadRequest("Erro ao tentar deletar palestrante");
+                var resultado = await _palestranteService.DeletePalestrante(id);
+                if (resultado) return Ok("Palestrante deletado");
+                return BadRequest("Palestrante não deletado");
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Erro ao tentar deletar palestrante. Erro: {ex.Message}");
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetPalestrantes()
         {
@@ -69,23 +86,6 @@ namespace API.Controller
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError,
                     $"Erro ao tentar recuperar palestrante. Erro: {ex.Message}");
-            }
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePalestrante(int id)
-        {
-            try
-            {
-                if (id <= 0) return BadRequest("Erro ao tentar deletar palestrante");
-                var resultado = await _palestranteService.DeletePalestrante(id);
-                if (resultado) return Ok("Palestrante deletado");
-                return BadRequest("Palestrante não deletado");
-            }
-            catch (Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,
-                    $"Erro ao tentar deletar palestrante. Erro: {ex.Message}");
             }
         }
 

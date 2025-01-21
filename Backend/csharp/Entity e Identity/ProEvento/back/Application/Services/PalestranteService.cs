@@ -1,9 +1,7 @@
 using AutoMapper;
-using Domain.entities;
 using Application.DTOs;
 using Application.Contracts;
 using Persistence.Contracts;
-using Persistence.Repositories;
 
 namespace Application.Services
 {
@@ -21,7 +19,7 @@ namespace Application.Services
             this.palestrantePersist = palestrantePersist;        
         }
 
-        public async Task<PalestranteDTO> AddPalestrante(Palestrante model)
+        public async Task<PalestranteDTO> AddPalestrante(PalestranteDTO model)
         {
             try
             {
@@ -41,7 +39,7 @@ namespace Application.Services
             }
         }
 
-        public async Task<PalestranteDTO> UpdatePalestrante(int PalestranteId, Palestrante model)
+        public async Task<PalestranteDTO> UpdatePalestrante(int PalestranteId, PalestranteDTO model)
         {
             try
             {

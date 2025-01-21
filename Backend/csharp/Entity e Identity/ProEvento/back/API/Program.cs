@@ -1,4 +1,6 @@
 using Persistence.Context;
+using Application.Services;
+using Application.Contracts;
 using Persistence.Contracts;
 using Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +17,9 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 //Add Scopeds
 builder.Services.AddScoped<IGeralPersist, GeralPersist>();
 builder.Services.AddScoped<IEventoPersist, EventoPersist>();
+builder.Services.AddScoped<IEventoService, EventoService>();
 builder.Services.AddScoped<IPalestrantePersist, PalestrantePersist>();
+builder.Services.AddScoped<IPalestranteService, PalestranteService>();
 
 builder.Services.AddDbContext<ProEventoContext>(options =>
     options.UseSqlite("DATA Source=banco.db")
@@ -26,12 +30,14 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-app.UseHttpsRedirection();
+
+var dbContext = app.Services.CreateScope().ServiceProvider.GetRequiredService<ProEventoContext>();
+
+// Deleta o banco de dados e recria
+dbContext.Database.EnsureDeleted(); // Exclui o banco
+dbContext.Database.EnsureCreated(); // Cria o banco novamente
+app.MapOpenApi();
+
 app.Run();
 
 

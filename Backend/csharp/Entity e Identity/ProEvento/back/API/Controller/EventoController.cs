@@ -55,7 +55,7 @@ namespace API.Controller
             }
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetEventoById(int id)
         {
             try
