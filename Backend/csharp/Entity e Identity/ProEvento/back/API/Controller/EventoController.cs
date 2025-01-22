@@ -39,7 +39,27 @@ namespace API.Controller
             if(evento == null) return BadRequest("Erro ao tentar adicionar evento");
             return Ok(evento);
         }
-                [HttpGet]
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteEvento(int Id) 
+        {
+            try
+            {
+                if(Id == null || Id < 0) return BadRequest("Erro ao tentar deletar usuario");
+                var resultado = await _eventoSerivce.DeleteEvento(Id);
+
+                if(resultado) return Ok("Evento deletado");
+                return BadRequest("Evento não deletado");
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Erro ao tentar deletar eventos. Erro: {ex.Message}"
+                );
+            }
+        }
+
+        [HttpGet]
         public async Task<IActionResult> GetEventos() 
         {
             try
@@ -68,25 +88,6 @@ namespace API.Controller
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError,
                     $"Erro ao tentar recuperar eventos. Erro: {ex.Message}");
-            }
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEvento(int Id) 
-        {
-            try
-            {
-                if(Id == null || Id < 0) return BadRequest("Erro ao tentar deletar usuario");
-                var resultado = await _eventoSerivce.DeleteEvento(Id);
-
-                if(resultado) return Ok("Evento deletado");
-                return BadRequest("Evento não deletado");
-            }
-            catch (Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,
-                    $"Erro ao tentar deletar eventos. Erro: {ex.Message}"
-                );
             }
         }
 

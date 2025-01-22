@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controller
 {
-    [Controller]
-    [Route("api/[Controller]")]
+    [Route("api/[controller]")]
+    [ApiController]
     public class PalestranteController : ControllerBase
     {
         private readonly IPalestranteService _palestranteService;
