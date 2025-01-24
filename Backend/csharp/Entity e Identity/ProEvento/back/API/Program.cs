@@ -44,7 +44,7 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/openapi/v1.json", "ProEvento API")
     );
 }
-
+//Teste
 app.Run();
 
 
