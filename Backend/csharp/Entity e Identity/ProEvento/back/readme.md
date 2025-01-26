@@ -1193,3 +1193,5 @@ e agora iremos criar a migration para gerar nosso banco com os comandos:
     dotnet ef migrations add InitialCreate -p .\Persistence\ -s .\API\ // Para criar a primeiro migration por nome de InitialCreate
     dotnet ef database update -p .\API\
 ```
+
+//atest
