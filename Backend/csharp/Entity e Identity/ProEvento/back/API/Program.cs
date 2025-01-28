@@ -4,6 +4,7 @@ using Application.Contracts;
 using Persistence.Contracts;
 using Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,10 +41,15 @@ if (app.Environment.IsDevelopment())
     dbContext.Database.EnsureCreated(); // Cria o banco novamente
 
     app.MapOpenApi();
-    app.UseSwaggerUI(options =>
-        options.SwaggerEndpoint("/openapi/v1.json", "ProEvento API")
-    );
+    app.MapScalarApiReference();
 }
+
+
+app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.Run();
 
 

@@ -15,7 +15,6 @@ C:\Users\gabriel.guerra\Desktop\Estudo\Backend\csharp\Entity e Identity\ProEvent
 C:\Users\gabriel.guerra\Desktop\Estudo\Backend\csharp\Entity e Identity\ProEvento\back\API\obj\Debug\net9.0\API.csproj.CoreCompileInputs.cache
 C:\Users\gabriel.guerra\Desktop\Estudo\Backend\csharp\Entity e Identity\ProEvento\back\API\obj\Debug\net9.0\API.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\gabriel.guerra\Desktop\Estudo\Backend\csharp\Entity e Identity\ProEvento\back\API\obj\Debug\net9.0\API.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\gabriel.guerra\Desktop\Estudo\Backend\csharp\Entity e Identity\ProEvento\back\API\obj\Debug\net9.0\API.sourcelink.json
 C:\Users\gabriel.guerra\Desktop\Estudo\Backend\csharp\Entity e Identity\ProEvento\back\API\obj\Debug\net9.0\scopedcss\bundle\API.styles.css
 C:\Users\gabriel.guerra\Desktop\Estudo\Backend\csharp\Entity e Identity\ProEvento\back\API\obj\Debug\net9.0\staticwebassets.build.json
 C:\Users\gabriel.guerra\Desktop\Estudo\Backend\csharp\Entity e Identity\ProEvento\back\API\obj\Debug\net9.0\staticwebassets.development.json
@@ -315,3 +314,4 @@ C:\Users\GoatG\Desktop\Estudo\Backend\Csharp\Entity e Identity\ProEvento\back\AP
 C:\Users\GoatG\Desktop\Estudo\Backend\Csharp\Entity e Identity\ProEvento\back\API\obj\Debug\net9.0\API.genruntimeconfig.cache
 C:\Users\GoatG\Desktop\Estudo\Backend\Csharp\Entity e Identity\ProEvento\back\API\obj\Debug\net9.0\ref\API.dll
 C:\Users\GoatG\Desktop\Estudo\Backend\Csharp\Entity e Identity\ProEvento\back\API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\gabriel.guerra\Desktop\Estudo\Backend\csharp\Entity e Identity\ProEvento\back\API\bin\Debug\net9.0\Scalar.AspNetCore.dll

@@ -91,7 +91,7 @@ namespace API.Controller
             }
         }
 
-        [HttpGet]
+        [HttpGet("tema/")]
         public async Task<IActionResult> GetEventoByTema(string tema) 
         {
             try

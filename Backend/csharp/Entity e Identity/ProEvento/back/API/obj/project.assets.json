@@ -848,6 +848,22 @@
           }
         }
       },
+      "Scalar.AspNetCore/2.0.7": {
+        "type": "package",
+        "compile": {
+          "lib/net9.0/Scalar.AspNetCore.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Scalar.AspNetCore.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
       "SQLitePCLRaw.bundle_e_sqlite3/2.1.10": {
         "type": "package",
         "dependencies": {
@@ -982,22 +998,6 @@
         "runtime": {
           "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll": {}
         }
-      },
-      "Swashbuckle.AspNetCore.SwaggerUI/7.2.0": {
-        "type": "package",
-        "compile": {
-          "lib/net9.0/Swashbuckle.AspNetCore.SwaggerUI.dll": {
-            "related": ".pdb;.xml"
-          }
-        },
-        "runtime": {
-          "lib/net9.0/Swashbuckle.AspNetCore.SwaggerUI.dll": {
-            "related": ".pdb;.xml"
-          }
-        },
-        "frameworkReferences": [
-          "Microsoft.AspNetCore.App"
-        ]
       },
       "System.CodeDom/6.0.0": {
         "type": "package",
@@ -2978,6 +2978,23 @@
         "newtonsoft.json.bson.nuspec"
       ]
     },
+    "Scalar.AspNetCore/2.0.7": {
+      "sha512": "yc84zEjzY7K0eGTI6Tuho3es5gxuiCunXpwH9aVkaXACZjrDCLvzdm7LiTucLLYjtf4SZGtBFj4QAbOcKjGzww==",
+      "type": "package",
+      "path": "scalar.aspnetcore/2.0.7",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon.png",
+        "lib/net8.0/Scalar.AspNetCore.dll",
+        "lib/net8.0/Scalar.AspNetCore.xml",
+        "lib/net9.0/Scalar.AspNetCore.dll",
+        "lib/net9.0/Scalar.AspNetCore.xml",
+        "scalar.aspnetcore.2.0.7.nupkg.sha512",
+        "scalar.aspnetcore.nuspec"
+      ]
+    },
     "SQLitePCLRaw.bundle_e_sqlite3/2.1.10": {
       "sha512": "UxWuisvZ3uVcVOLJQv7urM/JiQH+v3TmaJc1BLKl5Dxfm/nTzTUrqswCqg/INiYLi61AXnHo1M1JPmPqqLnAdg==",
       "type": "package",
@@ -3068,30 +3085,6 @@
         "lib/netstandard2.0/SQLitePCLRaw.provider.e_sqlite3.dll",
         "sqlitepclraw.provider.e_sqlite3.2.1.10.nupkg.sha512",
         "sqlitepclraw.provider.e_sqlite3.nuspec"
-      ]
-    },
-    "Swashbuckle.AspNetCore.SwaggerUI/7.2.0": {
-      "sha512": "hgrXeKzyp5OGN8qVvL7A+vhmU7mDJTfGpiMBRL66IcfLOyna8UTLtn3cC3CghamXpRDufcc9ciklTszUGEQK0w==",
-      "type": "package",
-      "path": "swashbuckle.aspnetcore.swaggerui/7.2.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll",
-        "lib/net6.0/Swashbuckle.AspNetCore.SwaggerUI.pdb",
-        "lib/net6.0/Swashbuckle.AspNetCore.SwaggerUI.xml",
-        "lib/net8.0/Swashbuckle.AspNetCore.SwaggerUI.dll",
-        "lib/net8.0/Swashbuckle.AspNetCore.SwaggerUI.pdb",
-        "lib/net8.0/Swashbuckle.AspNetCore.SwaggerUI.xml",
-        "lib/net9.0/Swashbuckle.AspNetCore.SwaggerUI.dll",
-        "lib/net9.0/Swashbuckle.AspNetCore.SwaggerUI.pdb",
-        "lib/net9.0/Swashbuckle.AspNetCore.SwaggerUI.xml",
-        "lib/netstandard2.0/Swashbuckle.AspNetCore.SwaggerUI.dll",
-        "lib/netstandard2.0/Swashbuckle.AspNetCore.SwaggerUI.pdb",
-        "lib/netstandard2.0/Swashbuckle.AspNetCore.SwaggerUI.xml",
-        "package-readme.md",
-        "swashbuckle.aspnetcore.swaggerui.7.2.0.nupkg.sha512",
-        "swashbuckle.aspnetcore.swaggerui.nuspec"
       ]
     },
     "System.CodeDom/6.0.0": {
@@ -3526,39 +3519,46 @@
       "Microsoft.AspNetCore.OpenApi >= 9.0.1",
       "Microsoft.EntityFrameworkCore.Design >= 9.0.0",
       "Persistence >= 1.0.0",
-      "Swashbuckle.AspNetCore.SwaggerUI >= 7.2.0"
+      "Scalar.AspNetCore >= 2.0.7"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\GoatG\\.nuget\\packages\\": {}
+    "C:\\Users\\gabriel.guerra\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\GoatG\\Desktop\\Estudo\\Backend\\Csharp\\Entity e Identity\\ProEvento\\back\\API\\API.csproj",
+      "projectUniqueName": "C:\\Users\\gabriel.guerra\\Desktop\\Estudo\\Backend\\csharp\\Entity e Identity\\ProEvento\\back\\API\\API.csproj",
       "projectName": "API",
-      "projectPath": "C:\\Users\\GoatG\\Desktop\\Estudo\\Backend\\Csharp\\Entity e Identity\\ProEvento\\back\\API\\API.csproj",
-      "packagesPath": "C:\\Users\\GoatG\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\GoatG\\Desktop\\Estudo\\Backend\\Csharp\\Entity e Identity\\ProEvento\\back\\API\\obj\\",
+      "projectPath": "C:\\Users\\gabriel.guerra\\Desktop\\Estudo\\Backend\\csharp\\Entity e Identity\\ProEvento\\back\\API\\API.csproj",
+      "packagesPath": "C:\\Users\\gabriel.guerra\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\gabriel.guerra\\Desktop\\Estudo\\Backend\\csharp\\Entity e Identity\\ProEvento\\back\\API\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\GoatG\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\gabriel.guerra\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\GoatG\\Desktop\\Estudo\\Backend\\Csharp\\Entity e Identity\\ProEvento\\back\\Application\\Application.csproj": {
-              "projectPath": "C:\\Users\\GoatG\\Desktop\\Estudo\\Backend\\Csharp\\Entity e Identity\\ProEvento\\back\\Application\\Application.csproj"
+            "C:\\Users\\gabriel.guerra\\Desktop\\Estudo\\Backend\\csharp\\Entity e Identity\\ProEvento\\back\\Application\\Application.csproj": {
+              "projectPath": "C:\\Users\\gabriel.guerra\\Desktop\\Estudo\\Backend\\csharp\\Entity e Identity\\ProEvento\\back\\Application\\Application.csproj"
             },
-            "C:\\Users\\GoatG\\Desktop\\Estudo\\Backend\\Csharp\\Entity e Identity\\ProEvento\\back\\Persistence\\Persistence.csproj": {
-              "projectPath": "C:\\Users\\GoatG\\Desktop\\Estudo\\Backend\\Csharp\\Entity e Identity\\ProEvento\\back\\Persistence\\Persistence.csproj"
+            "C:\\Users\\gabriel.guerra\\Desktop\\Estudo\\Backend\\csharp\\Entity e Identity\\ProEvento\\back\\Persistence\\Persistence.csproj": {
+              "projectPath": "C:\\Users\\gabriel.guerra\\Desktop\\Estudo\\Backend\\csharp\\Entity e Identity\\ProEvento\\back\\Persistence\\Persistence.csproj"
             }
           }
         }
@@ -3593,9 +3593,9 @@
             "target": "Package",
             "version": "[9.0.0, )"
           },
-          "Swashbuckle.AspNetCore.SwaggerUI": {
+          "Scalar.AspNetCore": {
             "target": "Package",
-            "version": "[7.2.0, )"
+            "version": "[2.0.7, )"
           }
         },
         "imports": [
