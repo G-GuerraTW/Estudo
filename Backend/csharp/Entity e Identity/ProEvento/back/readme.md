@@ -1194,4 +1194,123 @@ e agora iremos criar a migration para gerar nosso banco com os comandos:
     dotnet ef database update -p .\API\
 ```
 
-//atest
+### 8. Autenticação JWT
+
+#### Nesta seção inicaremos aconfiguração do middleware JWT em nossa aaplicação com isso iremos configurar o token criptografado para o usuario poder acessar as rotas do nosso sistema.
+
+#### 1. Instalar o package Dotnet Entity dentro das camadas de **Domain**,
+
+```CSHARP
+    Microsoft.AspNetCore.Identity.EntityFrameworkCore
+```
+
+#### 2. Criar diretório chamado **Identity** e **Enum** dentro da camada de Domain, ambos diretorios precisma estár no mesmo nivel hierarquicos
+
+#### 3. Diretorio **Enum** criaremos um arquivo de tipo **Enum** e está sera a função do usuario paritcipante do evento Funcao.cs:
+```CSHARP
+namespace Domain.Enum
+{
+    public enum Funcao
+    {
+        NaoInformado,
+        Participante,
+        Palestrante
+    }
+}
+```
+
+#### Também criaremos um **Enum** no mesmo diretório com o nome de Titulo no qual sera o titulo de formação do usuario, Titulo.cs:
+```CSHARP
+namespace Domain.Enum
+{
+    public enum Titulo
+    {
+        NaoInformado,
+        Tecnologo,
+        Bacharel,
+        Especialista,
+        PosGraduado,
+        Mestrado,
+        Doutorado,
+        PosDoutorado
+    }
+}
+```
+
+#### 4. Criando classe de usuario no diretório Identity chamando **User.cs** ela ficara assim, User.cs:
+```CSHARP
+using Domain.Enum;
+
+namespace Domain.Identity
+{
+    public class User
+    {
+        public string PrimeiroNome { get; set; }
+        public string UltimoNome { get; set; }
+        public Titulo Titulo { get; set; }
+        public string Descricao { get; set; }
+        public Funcao Funcao { get; set; }
+        public string ImagemPerfil { get; set; }
+        public IEnumerable<UserRole> UserRoles { get; set; } = new List<UserRole>();
+    }
+}
+```
+#### 5. Criando Classe **Role**, essa classe sera responsavel por abrigar os niveis de Acesso que os demais usuarios poderão ter no sistema, cada usuario pode ter um ou mais Role e cada Role pode pertencer a um ou mais Usuarios, para isso iremos criar uma classe intermediaria chamada **UserRole.cs** para fazer a interação entre as duas classes que são muito para muitos entre User <--> Role, Arquivo Role.cs:
+```CSHARP
+namespace Domain.Identity
+{
+    public class Role : IdentityRole<int>
+    {
+        public IEnumerable<UserRole> UserRoles { get; set; } = new List<UserRole>();
+    }
+}
+```
+
+#### 6. Criando classe **UserRole** no qual sera o intermedio entre as duas classe User e Role, UserRole.cs:
+```CSHARP
+namespace Domain.Identity
+{
+    public class UserRole : IdentityUserRole<int>
+    {
+        public User User { get; set; }
+        public Role Role { get; set; }
+    }
+}
+```
+#### 7. Agora em todas as Entidades modelos que tera alteração por um usuario adicionaremos nela as propriedades listadas abaixo para o controle de quem alterou o que no sistema, e também para fazer uma validação se aquele usuario pode alterar alguam coisa com a role que ele tem, Exemplo Entidade modelo **Evento.cs**:
+```CSHARP
+    public int UserId { get; set; }
+    public User User { get; set; }
+```
+
+#### 8. também iremos adicionar as propriedades de User dentro da tabela Palestrante pois palestrante também e o registro de uma pessoa, porém para a pessoa estar registrada primeiro ela necessitar ser um usuario no sistema, assim ficaria a tabela Palestrante com usuario integrado nela, Palestrante.cs:
+```CSHARP
+using Domain.Identity;
+
+namespace Domain.entities
+{
+    public class Palestrante
+    {
+        public int Id { get; set; }        
+        public string MiniCurriculo { get; set; }
+        public int UserId { get; set; }
+        public User User { get; set; }
+        public IEnumerable<RedeSocial> RedesSociais { get; set; } = new List<RedeSocial>();
+        public IEnumerable<EventoPalestrante> EventosPalestrantes { get; set; } = new List<EventoPalestrante>();
+    }
+}
+```
+
+#### Associações completas iniciaremos o passo de configurar o Contexto para Autenticação
+
+#### 9. Configurando  o **Contexto**, inicalmente adicionaremos o package Microsoft.Identity.EntityFrameworkCore a nossa camada de Persistencia:
+```CSHARP
+<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.3" />
+```
+
+#### 10. Adicionando a herança no ProEventoContext, agora iremos trocar a herança de classe do nosso contexto pois agora também teremos o DbSet de usuario, Role e UsuerRole para ser utilizado, com isso temos a classe de herança que ja irá fornecer essas informações para nós, sendo assim o nosso arquivo ProEventosContext.cs ficará assim herdadando o IdentityDbContext: 
+
+
+Miniatura da aula
+5:07 / 9:55
+201. Herança do Contexto
