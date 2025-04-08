@@ -1,10 +1,15 @@
 using Domain.entities;
+using Domain.Identity;
 using System.Reflection;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Persistence.Context
 {
-    public class ProEventoContext : DbContext
+    public class ProEventoContext : IdentityDbContext<User, Role, int,
+                                                      IdentityUserClaim<int>, IdentityUserRole<int>, IdentityUserLogin<int>,
+                                                      IdentityRoleClaim<int>, IdentityUserToken<int>>
     {
         public ProEventoContext(DbContextOptions<ProEventoContext> options) : base(options) { }
         public DbSet<Evento> Eventos { get; set; } 

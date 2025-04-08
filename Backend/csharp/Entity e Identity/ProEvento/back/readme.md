@@ -1311,6 +1311,41 @@ namespace Domain.entities
 #### 10. Adicionando a herança no ProEventoContext, agora iremos trocar a herança de classe do nosso contexto pois agora também teremos o DbSet de usuario, Role e UsuerRole para ser utilizado, com isso temos a classe de herança que ja irá fornecer essas informações para nós, sendo assim o nosso arquivo ProEventosContext.cs ficará assim herdadando o IdentityDbContext: 
 
 
+#### Lembrando que para sobrescrever a confiugração padrão dos o id de IdentityUser, Role, UserRole precisamos sobrescrever o **IdentityDbContext<>** utilizando os <> para chegar nas propriedades necessarias como parametro iremos selecionar o IdentityDbContext e apertar F12 assim conseguimos chegar nas informações necessarias para sobrescrever e dentro dos <> de cada classe iremos adicionar a tipagem que queremos naqula propriedade que no nosso caso deste projeto sera int, e ficara logo assim:
+```CSHARP
+using Domain.entities;
+using Domain.Identity;
+using System.Reflection;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
+namespace Persistence.Context
+{
+    public class ProEventoContext : IdentityDbContext<User, Role, int,
+                                                      IdentityUserClaim<int>, IdentityUserRole<int>, IdentityUserLogin<int>,
+                                                      IdentityRoleClaim<int>, IdentityUserToken<int>>
+    {
+        public ProEventoContext(DbContextOptions<ProEventoContext> options) : base(options) { }
+        public DbSet<Evento> Eventos { get; set; } 
+        public DbSet<Lote> Lotes { get; set; }
+        public DbSet<RedeSocial> RedesSociais { get; set; }
+        public DbSet<Palestrante> Palestrantes { get; set; }
+        public DbSet<EventoPalestrante> EventosPalestrantes { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder) 
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+    
+        }
+    }
+}
+```
+
+
+
 Miniatura da aula
-5:07 / 9:55
-201. Herança do Contexto
+5:10 / 7:46
+202. UserRoles No Contexto
