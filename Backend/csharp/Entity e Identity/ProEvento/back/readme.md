@@ -1395,6 +1395,3 @@ namespace Persistence.Contracts
     }
 }
 ```
-Miniatura da aula
-4:30 / 7:09
-204. Class e Interface de Usuário
