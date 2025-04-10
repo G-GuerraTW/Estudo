@@ -1323,7 +1323,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 namespace Persistence.Context
 {
     public class ProEventoContext : IdentityDbContext<User, Role, int,
-                                                      IdentityUserClaim<int>, IdentityUserRole<int>, IdentityUserLogin<int>,
+                                                      IdentityUserClaim<int>, UserRole, IdentityUserLogin<int>,
                                                       IdentityRoleClaim<int>, IdentityUserToken<int>>
     {
         public ProEventoContext(DbContextOptions<ProEventoContext> options) : base(options) { }
@@ -1344,8 +1344,57 @@ namespace Persistence.Context
 }
 ```
 
+#### 11. Agora iremos criar o arquivo de configuração do fluenteAPI sobre a tabela **UserRole.cs** sendo que ela é uma associação entre User <---> UserRole e Role <---> UserRole assim criaremos o arquivo **Persistence/Configurations/UserRoleConfiguration.cs** e ele ficara assim:
+```CSHARP
+using Domain.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+namespace Persistence.Configurations
+{
+    public class UserRoleConfiguration : IEntityTypeConfiguration<UserRole>
+    {
+        public void Configure(EntityTypeBuilder<UserRole> builder)
+        {
+            //Criando uma chave Primaria composta por duas chaves estrangeiras
+            builder.HasKey(UR => new { UR.UserId, UR.RoleId});
 
+            builder.HasOne(UR => UR.User)
+                .WithMany(U => U.UserRoles)
+                .HasForeignKey(UR => UR.UserId) // Quando a chave primaria é composta precisamos especificar de onde vem as chaves estrangerias
+                .IsRequired();
+
+            builder.HasOne(UR => UR.Role)
+                .WithMany(R => R.UserRoles)
+                .HasForeignKey(UR => UR.RoleId) // Quando a chave primaria é composta precisamos especificar de onde vem as chaves estrangerias
+                .IsRequired();
+        }
+    }
+}
+```
+#### 12. Agora iremos apagar nosso banco e subir uma nova Migration para adicionar as novas propriedades do banco, que no caso é as propriedades de Usuario User, Role, UserRole. apos criar essa nova migration iremos rodar o database update, seguimos os seguintes comando após a exclusão do banco:
+```CSHARP
+    dotnet ef migrations add Adicionando-Identity -p ProEventos.Persistence -s ProEventos.API
+    dotnet ef database update -s ProEventos.API
+```
+
+#### Após criar o banco novamente podemos ja verificar que temos as tabelas AspNet ja integradas no banco, e assim podemos prosseguir com a autenticação do JWT em nosso projeto e adicionar as rotas de Login.
+
+#### 13. Criando Persistencia de Usuario, e fazer o caminho de Persistencia, Serviço e API/Controller, Dentro da camada de Persistencia criaremos a Interface chamada IUserPersist.cs e depois a classe UserPersist.cs:
+#### IUserPersist.cs
+```CSHARP
+using Domain.Identity;
+
+namespace Persistence.Contracts
+{
+    public interface IUserPersist : IGeralPersist //neste ponto estamos herdando IGeralPersist dentro da nossa interface atual.
+    {
+        public Task<IEnumerable<User>> GetUsersAsync();
+        public Task<User> GetUserByIdAsync(int id);
+        public Task<User> GetUserByUsernameAsync(string username);
+    }
+}
+```
 Miniatura da aula
-5:10 / 7:46
-202. UserRoles No Contexto
+4:30 / 7:09
+204. Class e Interface de Usuário

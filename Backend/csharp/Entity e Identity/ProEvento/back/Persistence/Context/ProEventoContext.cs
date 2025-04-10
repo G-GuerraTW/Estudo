@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 namespace Persistence.Context
 {
     public class ProEventoContext : IdentityDbContext<User, Role, int,
-                                                      IdentityUserClaim<int>, IdentityUserRole<int>, IdentityUserLogin<int>,
+                                                      IdentityUserClaim<int>, UserRole, IdentityUserLogin<int>,
                                                       IdentityRoleClaim<int>, IdentityUserToken<int>>
     {
         public ProEventoContext(DbContextOptions<ProEventoContext> options) : base(options) { }

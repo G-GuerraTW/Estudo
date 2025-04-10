@@ -4,7 +4,7 @@ namespace Domain.entities
 {
     public class Evento
     {
-        public User user { get; set; }        
+        public int Id { get; set; }
         public string Local { get; set; }
         public string Tema { get; set; }
         public DateTime? DataEvento { get; set; }
