@@ -1032,9 +1032,12 @@ dotnet add .\API\ reference .\Persistence\
 
 1.  Adicionando as dependencias necessarias para rodar a API:
 ```csharp
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+    <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.14" />
 	<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.3" />
 ```
 
 2. Configurando o **Program.cs**
@@ -1380,7 +1383,7 @@ namespace Persistence.Configurations
 
 #### Após criar o banco novamente podemos ja verificar que temos as tabelas AspNet ja integradas no banco, e assim podemos prosseguir com a autenticação do JWT em nosso projeto e adicionar as rotas de Login.
 
-#### 13. Criando Persistencia de Usuario, e fazer o caminho de Persistencia, Serviço e API/Controller, Dentro da camada de Persistencia criaremos a Interface chamada IUserPersist.cs e depois a classe UserPersist.cs:
+#### 13. Criando Interface Persistencia de Usuario, e fazer o caminho de Persistencia, Serviço e API/Controller, Dentro da camada de Persistencia criaremos a Interface chamada IUserPersist.cs e depois a classe UserPersist.cs:
 #### IUserPersist.cs
 ```CSHARP
 using Domain.Identity;
@@ -1392,6 +1395,227 @@ namespace Persistence.Contracts
         public Task<IEnumerable<User>> GetUsersAsync();
         public Task<User> GetUserByIdAsync(int id);
         public Task<User> GetUserByUsernameAsync(string username);
+    }
+}
+```
+#### 14. Após criar nossa Classe **UserPersist.cs** iremos herdar ela da classe GeralPerist e a interface IUserPersist, neste ponto iremos herdar a classe GeralPersist para completar o requisito de nossa interface IUser no qual ela exige que fornecemos de todos os metodos contidos na interface IGeralPersiste també, a classe ficara da seguinte forma, **UserPersis.cs**: 
+```CSHARP
+
+using Domain.Identity;
+using Persistence.Context;
+using Persistence.Contracts;
+
+namespace Persistence.Repositories
+{                              //Aqui Herdamos a classe GeralPersist para completar a necessidade da interface 
+    public class UserPersist : GeralPersist, IUserPersist
+    {
+        private readonly ProEventoContext context;
+        public UserPersist(ProEventoContext context) : base(context) //Compartilhando o contexto com a classe base GeralPersist
+        {
+            this.context = context;
+        }
+
+        public async Task<IEnumerable<User>> GetUsersAsync()
+        {
+            return await context.Users.ToListAsync();
+        }
+        public async Task<User> GetUserByIdAsync(int id)
+        {                               //faz uam pesquisa pela chave primaria, podendo ser chave primaria composta separando o parametro por > ",".  se não encontrar nada retornar null
+            return await context.Users.FindAsync(id);
+        }
+
+        public async Task<User> GetUserByUsernameAsync(string username)
+        {                               //Espera que só exista um elemento que satisfaça a condição, Se encontrar mais de um, lança exceção, Se não encontrar nenhum, retorna null.
+            return await context.Users.SingleOrDefaultAsync(U => U.UserName == username.ToLower());
+        }
+    }
+}
+```
+#### 15. Iniciando o Serviço para gerenciar as contas, primeiro iremos criar a interface **IAccountService.cs** utilizaremos como camada de logica sobre o repositorio de User, o contrato ficara assim, **IAccountService.cs**:
+```CSHARP
+using Application.DTOs;
+using Microsoft.AspNetCore.Identity;
+
+namespace Application.Contracts
+{
+    public interface IUserService
+    {
+        Task<bool> UserExists(string username);
+        Task<UserUpdateDTO> GetUserByUsernameAsync(string username);
+        Task<SignInResult> CheckUserPasswordAsync(string userUpdateDTO, string password);
+        Task<UserDTO> CreateAccountAssync(UserDTO userDTO);
+        Task<UserUpdateDTO> UpdateAccount(UserUpdateDTO userUpdateDTO);
+    }
+}
+```
+
+#### 16. Em seguida iremos criar todas as DTOs necessarias para fornecer para o Serviço: "**UserUpdateDTO**", "**UserDTO**". Iniciando com a **UserUpdateDTO**: 
+
+```CSHARP
+namespace Application.DTOs
+{
+    public class UserUpdateDTO
+    {
+        public string Id { get; set;}
+        public string Titulo { get; set; }
+        public string UserName { get; set; }
+        public string PrimeiroNome { get; set; }
+        public string UltimoNome { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Funcao { get; set; }
+        public string Descricao { get; set; }
+        public string Password { get; set; }
+        public string Token { get; set; }
+    }
+}
+```
+
+#### **UserDTO**: 
+```CSHARP
+namespace Application.DTOs
+{
+    public class UserDTO
+    {
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public string PrimeiroNome { get; set; }
+        public string UltimoNome { get; set; }
+    }
+}
+```
+
+#### **UserLoginDTO**:
+```CSHARP
+namespace Application.DTOs
+{
+    public class UserLoginDTO
+    {
+        public string UserName { get; set; }
+        public string Password { get; set; }
+    }
+}
+```
+
+#### 17. Criando o Serviço **AccountService** herdamos ela de IAccountSerivce e adicionando o package **Identity Entity a camada de amplicação**:
+```CSHARP
+<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
+```
+
+#### Após Adicionarmos o pacote iniciaremos as implementações, arquivo **AccountService.cs** :
+```CSHARP
+using AutoMapper;
+using Domain.Identity;
+using Application.DTOs;
+using Application.Contracts;
+using Persistence.Contracts;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
+namespace Application.Services
+{
+    public class AccountService : IAccountService
+    {
+        private readonly IMapper mapper;
+        private readonly UserManager<User> userManager;
+        private readonly IUserPersist userPersist;
+        private readonly SignInManager<User> signInManager;
+
+        public AccountService(UserManager<User> userManager, SignInManager<User> signInManager, IMapper mapper, IUserPersist userPersist)
+        {
+            this.userManager = userManager;
+            this.mapper = mapper;
+            this.userPersist = userPersist;
+            this.signInManager = signInManager;
+            
+        }
+        public async Task<SignInResult> CheckUserPasswordAsync(UserUpdateDTO userUpdateDTO, string password)
+        {
+            try
+            {
+                var user = await userManager.Users.SingleOrDefaultAsync(U => U.UserName == userUpdateDTO.UserName.ToLower());  
+                return await signInManager.CheckPasswordSignInAsync(user, password, false);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Erro ao tentar verificar password. Erro: {ex.Message}");
+            }
+        }
+
+        public async Task<UserDTO> CreateAccountAssync(UserDTO userDTO)
+        {
+            try
+            {
+                var user = mapper.Map<User>(userDTO);
+                var result = await userManager.CreateAsync(user, userDTO.Password);
+
+                if(result.Succeeded) 
+                {
+                    var userRetorno = mapper.Map<UserDTO>(user);
+                    return userRetorno;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Erro ao tentar Criar Conta. Erro: {ex.Message}");
+            }
+        }
+
+        public async Task<UserUpdateDTO> GetUserByUsernameAsync(string username)
+        {
+            try
+            {
+                var user = await userManager.FindByNameAsync(username);
+
+                if(user == null) return null;
+
+                var userRetorno = mapper.Map<UserUpdateDTO>(user);
+                return userRetorno;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Erro ao tentar Recuperar Usuario. Erro: {ex.Message}");
+            }
+        }
+
+        public async Task<UserUpdateDTO> UpdateAccount(UserUpdateDTO userUpdateDTO)
+        {
+            try
+            {
+                var user = await userPersist.GetUserByUsernameAsync(userUpdateDTO.UserName);
+                if(user == null) return null;
+
+                var token = await userManager.GeneratePasswordResetTokenAsync(user);
+                var result = await userManager.ResetPasswordAsync(user, token, userUpdateDTO.Password);
+
+                userPersist.Update(user);
+
+                if(await userPersist.SaveChangesAsync()) 
+                {
+                    var userRetorno = await userPersist.GetUserByUsernameAsync(user.UserName);
+                    return mapper.Map<UserUpdateDTO>(userRetorno);
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Erro ao tentar Atualizar Cadastro. Erro: {ex.Message}");
+            }
+        }
+
+        public async Task<bool> UserExists(string username)
+        {
+            try
+            {
+                return await userManager.Users.AnyAsync(U => U.UserName == username.ToLower());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Erro ao tentar verificar Username. Erro: {ex.Message}");
+            }
+        }
     }
 }
 ```
