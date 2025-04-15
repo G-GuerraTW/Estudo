@@ -1036,7 +1036,7 @@ dotnet add .\API\ reference .\Persistence\
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.14" />
 	<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.3" />
 ```
 
@@ -1501,6 +1501,8 @@ namespace Application.DTOs
 #### 17. Criando o Serviço **AccountService** herdamos ela de IAccountSerivce e adicionando o package **Identity Entity a camada de amplicação**:
 ```CSHARP
 <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
+<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.34.1" />
+<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.8.0" />
 ```
 
 #### Após Adicionarmos o pacote iniciaremos as implementações, arquivo **AccountService.cs** :
@@ -1618,4 +1620,276 @@ namespace Application.Services
         }
     }
 }
+```
+
+#### 18. Iniciando a interface do **ITokenService** agora iremos definir o contrato de nossa classe de token,:
+```CSHARP
+using Application.DTOs;
+
+namespace Application.Contracts
+{
+    public interface ITokenService
+    {
+        Task<string> CreateToken(UserUpdateDTO userUpdateDTO);
+    }
+}
+```
+
+#### 19 Criando o serviço **TokenService.cs**, neste arquivo iremos fazer toda configuração de como sera gerado nosso token e o que ira conter nele:
+```CSHARP
+using AutoMapper;
+using Domain.Identity;
+using System.Text;
+using Application.DTOs;
+using Application.Contracts;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+
+namespace Application.Services
+{
+    public class TokenService : ITokenService
+    {
+        private readonly IMapper mapper;
+        private readonly SymmetricSecurityKey key;
+        private readonly IConfiguration configuration;
+        private readonly UserManager<User> userManager;
+        public TokenService(IConfiguration configuration, UserManager<User> userManager, IMapper mapper)
+        {
+            this.userManager = userManager;
+            this.mapper = mapper;
+            this.configuration = configuration;
+            this.key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["TokenKey"]));
+        }
+        public async Task<string> CreateToken(UserUpdateDTO userUpdateDTO)
+        {
+            var user = mapper.Map<User>(userUpdateDTO);
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName)
+            };
+
+            var roles = await userManager.GetRolesAsync(user);
+
+            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var tokenDescription = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = creds
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var token = tokenHandler.CreateToken(tokenDescription);
+
+            return tokenHandler.WriteToken(token);
+        }
+    }
+}
+```
+
+#### Realizando referencia do Identity Dentro do **Program.cs**, primeiro iremos adicionar o package Authentication.JwtBearer na camada de API
+```CSHARP
+<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.4" />
+<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.4" />
+```
+#### Iniciando a configuração da autenticação e confiugração da senha JWT, segue como irá ficar o arquivo **program.cs**:
+```CSHARP
+using System.Text;
+using Domain.Identity;
+using Scalar.AspNetCore;
+using Persistence.Context;
+using Application.Services;
+using Application.Contracts;
+using Persistence.Contracts;
+using Persistence.Repositories;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
+var builder = WebApplication.CreateBuilder(args);
+
+#region 🔧 Configuração de Serviços (DI - Dependency Injection)
+
+// 🔄 Suporte a CORS (Cross-Origin Resource Sharing)
+builder.Services.AddCors();
+
+// 📦 Controllers com suporte a JSON e tratamento de loops de referência
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()) // Serializa enums como string
+    )
+    .AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore // Evita loop de referência nos objetos
+    );
+
+// 🔁 AutoMapper - Mapeia objetos entre camadas
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+#endregion
+
+#region 🔐 Configuração de Identity (Usuários, Senhas, Regras)
+
+builder.Services.AddIdentityCore<User>(options =>
+    {
+        // Regras para criação de senha
+        options.Password.RequireDigit = false;
+        options.Password.RequireNonAlphanumeric = true;
+        options.Password.RequireLowercase = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequiredLength = 4;
+    })
+    .AddRoles<Role>()
+    .AddRoleManager<RoleManager<Role>>()
+    .AddSignInManager<SignInManager<User>>()
+    .AddRoleValidator<RoleValidator<Role>>()
+    .AddEntityFrameworkStores<ProEventoContext>() // Usa o EF para armazenar usuários
+    .AddDefaultTokenProviders();
+
+#endregion
+
+#region 🔑 Configuração da Autenticação JWT
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"])
+            ),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
+
+#endregion
+
+#region 🗃️ Configuração do Banco de Dados
+
+builder.Services.AddDbContext<ProEventoContext>(options =>
+    options.UseSqlite("Data Source=banco.db")
+);
+
+#endregion
+
+#region 📦 Injeção de Dependência (Aplicação e Persistência)
+
+// Repositórios
+builder.Services.AddScoped<IGeralPersist, GeralPersist>();
+builder.Services.AddScoped<IEventoPersist, EventoPersist>();
+builder.Services.AddScoped<IPalestrantePersist, PalestrantePersist>();
+builder.Services.AddScoped<IUserPersist, UserPersist>();
+
+// Serviços
+builder.Services.AddScoped<IEventoService, EventoService>();
+builder.Services.AddScoped<IPalestranteService, PalestranteService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+
+#endregion
+
+#region 📘 Documentação Swagger (OpenAPI)
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+#endregion
+
+var app = builder.Build();
+
+#region 🧪 Ambiente de Desenvolvimento (Database + Swagger)
+
+if (app.Environment.IsDevelopment())
+{
+    // Inicializa o banco recriando do zero
+    var dbContext = app.Services.CreateScope().ServiceProvider.GetRequiredService<ProEventoContext>();
+    dbContext.Database.EnsureDeleted();
+    dbContext.Database.EnsureCreated();
+
+    // Habilita documentação da API
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProEvento V1")
+    );
+
+    // Mapeia documentação extra (Scalar)
+    app.MapOpenApi();
+    app.MapScalarApiReference();
+}
+
+#endregion
+
+#region 🚀 Pipeline de Execução
+
+app.UseHttpsRedirection();
+app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
+app.MapControllers();
+
+app.Run();
+
+#endregion
+
+```
+
+### 20. Iniciando Controller de Account, seguimos agora para a ultima etapa da camade de API criando as rotas para autorização, Login, Criar conta, update etc.....
+```CSHARP
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Application.Contracts;
+
+namespace API.Controller
+{   
+    [Authorize]
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AccountController : ControllerBase
+    {
+        private readonly ITokenService tokenService;
+        private readonly IAccountService accountService;
+        public AccountController(IAccountService accountService, ITokenService tokenService)
+        {
+            this.tokenService = tokenService;
+            this.accountService = accountService;
+        }
+
+        [HttpGet("GetUser/{userName}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetUser(string userName)
+        {
+            try
+            {
+                var user = await this.accountService.GetUserByUsernameAsync(userName);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Erro ao tentar recuperar Usuário. Erro: {ex.Message}");
+            }
+        }
+    }
+}
+```
+
+### Testaremos com está rota no insomnia por exemplo:
+```
+http://localhost:5241/api/account/GetUser/teste
 ```
