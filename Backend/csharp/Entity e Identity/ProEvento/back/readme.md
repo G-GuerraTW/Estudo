@@ -1498,6 +1498,14 @@ namespace Application.DTOs
 }
 ```
 
+#### Mapeando as novas DTO para utilizar o autoMapper dentro da aplicação, iremos adicionar as seguinte linhas no arquivo **ProEventoProfile.cs** que se encontra dentro de nossa camada de aplicação no diretório Helpers:
+```CSHARP
+            // Mapemanento da Autorizção
+            CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<User, UserLoginDTO>().ReverseMap();
+            CreateMap<User, UserUpdateDTO>().ReverseMap();
+```
+
 #### 17. Criando o Serviço **AccountService** herdamos ela de IAccountSerivce e adicionando o package **Identity Entity a camada de amplicação**:
 ```CSHARP
 <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
@@ -1891,5 +1899,6 @@ namespace API.Controller
 
 ### Testaremos com está rota no insomnia por exemplo:
 ```
-http://localhost:5241/api/account/GetUser/teste
+    http://localhost:5241/api/account/GetUser/teste
 ```
+

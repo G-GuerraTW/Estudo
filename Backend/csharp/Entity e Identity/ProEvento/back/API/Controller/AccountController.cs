@@ -54,5 +54,31 @@ namespace API.Controller
                     $"Erro ao tentar recuperar Usuário. Erro: {ex.Message}");
             }
         }
+
+        [HttpGet("Login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(UserLoginDTO userLogin)
+        {
+            try
+            {
+                var user = await this.accountService.GetUserByUsernameAsync(userLogin.UserName);
+                if(user == null) return Unauthorized("Usuário Inválido.");
+
+                var result = await accountService.CheckUserPasswordAsync(user, user.Password);
+                if(!result.Succeeded) return Unauthorized();
+
+                return Ok(new 
+                {
+                    userName
+                });
+
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Erro ao tentar recuperar Usuário. Erro: {ex.Message}");
+            }
+        }
     }
 }
